@@ -24,7 +24,7 @@ public class Gimnasio {
     private String telefono;
     private String email;
 
-    @Column(name = "logo_url")
+    @Column(name = "logo_url", columnDefinition = "LONGTEXT")
     private String logoUrl;
 
     @Column(name = "porcentaje_iva", nullable = false)

@@ -53,6 +53,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/propietario/suscripciones/suscripciones.component').then(m => m.SuscripcionesComponent)
       },
+      {
+        path: 'configuracion',
+        loadComponent: () =>
+          import('./features/propietario/configuracion/configuracion.component').then(m => m.ConfiguracionPropietarioComponent)
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

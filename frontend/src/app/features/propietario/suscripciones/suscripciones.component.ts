@@ -42,10 +42,11 @@ import { TipoSuscripcion, Extra, ClienteSuscripcion } from '../../../core/models
 export class SuscripcionesComponent implements OnInit {
 
   navItems: NavItem[] = [
-    { label: 'Dashboard',     icon: 'dashboard',       ruta: '/propietario/dashboard' },
-    { label: 'Entrenadores',  icon: 'sports',          ruta: '/propietario/entrenadores' },
-    { label: 'Clientes',      icon: 'group',           ruta: '/propietario/clientes' },
-    { label: 'Suscripciones', icon: 'card_membership', ruta: '/propietario/suscripciones' }
+    { label: 'Dashboard',      icon: 'dashboard',       ruta: '/propietario/dashboard' },
+    { label: 'Entrenadores',   icon: 'sports',          ruta: '/propietario/entrenadores' },
+    { label: 'Clientes',       icon: 'group',           ruta: '/propietario/clientes' },
+    { label: 'Suscripciones',  icon: 'card_membership', ruta: '/propietario/suscripciones' },
+    { label: 'Configuración',  icon: 'settings',        ruta: '/propietario/configuracion' }
   ];
 
   // Tipos de suscripción

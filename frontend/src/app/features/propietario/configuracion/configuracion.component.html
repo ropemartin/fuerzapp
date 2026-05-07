@@ -1,0 +1,174 @@
+<app-layout titulo="Configuración del gimnasio" [navItems]="navItems">
+
+  @if (cargando) {
+    <p class="texto-cargando">Cargando...</p>
+  } @else if (!gimnasio) {
+    <div class="sin-gimnasio">
+      <mat-icon>fitness_center</mat-icon>
+      <p>No hay ningún gimnasio seleccionado. Ve al dashboard y selecciona un gimnasio.</p>
+    </div>
+  } @else {
+
+    <div class="config-layout">
+
+      <!-- ── Columna izquierda: datos del gimnasio ── -->
+      <mat-card class="datos-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>store</mat-icon>
+          <mat-card-title>Datos del gimnasio</mat-card-title>
+          <mat-card-subtitle>Esta información aparece en las facturas emitidas a los clientes</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="form-grid">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre del gimnasio</mat-label>
+              <input matInput [(ngModel)]="form.nombre" required />
+              <mat-icon matSuffix>fitness_center</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Dirección</mat-label>
+              <input matInput [(ngModel)]="form.direccion" />
+              <mat-icon matSuffix>location_on</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Ciudad</mat-label>
+              <input matInput [(ngModel)]="form.ciudad" />
+              <mat-icon matSuffix>place</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+              <input matInput [(ngModel)]="form.telefono" />
+              <mat-icon matSuffix>phone</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email de contacto</mat-label>
+              <input matInput type="email" [(ngModel)]="form.email" />
+              <mat-icon matSuffix>email</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <mat-divider class="seccion-divider" />
+
+          <h3 class="seccion-titulo">
+            <mat-icon>receipt</mat-icon>
+            Configuración fiscal
+          </h3>
+
+          <mat-form-field appearance="outline" class="iva-field">
+            <mat-label>IVA aplicado en facturas (%)</mat-label>
+            <input matInput type="number" min="0" max="100" [(ngModel)]="form.porcentajeIva" />
+            <span matSuffix>%</span>
+            <mat-hint>Porcentaje de IVA que se aplica sobre la base imponible al generar facturas</mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary"
+                  [disabled]="guardando || !form.nombre.trim()"
+                  (click)="guardar()">
+            @if (guardando) {
+              <mat-spinner diameter="18" />
+            } @else {
+              <mat-icon>save</mat-icon>
+            }
+            {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- ── Columna derecha: logo ── -->
+      <mat-card class="logo-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>image</mat-icon>
+          <mat-card-title>Logotipo</mat-card-title>
+          <mat-card-subtitle>Se incluye en el encabezado de las facturas</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+
+          <!-- Preview -->
+          <div class="logo-preview-wrap">
+            @if (logoPreview) {
+              <img [src]="logoPreview" alt="Logo del gimnasio" class="logo-preview"
+                   (error)="logoPreview = null" />
+              <button mat-icon-button class="btn-eliminar-logo"
+                      matTooltip="Eliminar logo" (click)="eliminarLogo()">
+                <mat-icon>close</mat-icon>
+              </button>
+            } @else {
+              <div class="logo-placeholder">
+                <mat-icon>image_not_supported</mat-icon>
+                <span>Sin logotipo</span>
+              </div>
+            }
+          </div>
+
+          <!-- Tabs: subir / URL -->
+          <mat-tab-group [(selectedIndex)]="logoTabIndex" animationDuration="150ms">
+
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">upload</mat-icon>
+                Subir archivo
+              </ng-template>
+
+              <div class="tab-content">
+                <p class="tab-hint">PNG, JPG o WebP · máx. 2 MB</p>
+                <input #fileInput type="file" accept="image/*"
+                       (change)="onArchivoSeleccionado($event)" hidden />
+                <button mat-stroked-button type="button"
+                        (click)="fileInput.click()"
+                        [disabled]="subiendoArchivo">
+                  @if (subiendoArchivo) {
+                    <mat-spinner diameter="18" />
+                  } @else {
+                    <mat-icon>photo_library</mat-icon>
+                  }
+                  Elegir imagen
+                </button>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">link</mat-icon>
+                URL externa
+              </ng-template>
+
+              <div class="tab-content">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>URL del logotipo</mat-label>
+                  <input matInput [(ngModel)]="form.logoUrl"
+                         (ngModelChange)="onUrlCambiada()"
+                         placeholder="https://..." />
+                  <mat-icon matSuffix>link</mat-icon>
+                </mat-form-field>
+              </div>
+            </mat-tab>
+
+          </mat-tab-group>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary"
+                  [disabled]="guardando || !form.nombre.trim()"
+                  (click)="guardar()">
+            @if (guardando) {
+              <mat-spinner diameter="18" />
+            } @else {
+              <mat-icon>save</mat-icon>
+            }
+            {{ guardando ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+    </div>
+  }
+
+</app-layout>
