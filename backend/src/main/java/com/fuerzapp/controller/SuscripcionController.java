@@ -124,7 +124,7 @@ public class SuscripcionController {
     }
 
     @PostMapping("/api/clientes/{clienteId}/suscripcion/extras/{extraId}")
-    @PreAuthorize("hasAnyRole('PROPIETARIO', 'ADMIN_PLATAFORMA')")
+    @PreAuthorize("hasAnyRole('PROPIETARIO', 'ADMIN_PLATAFORMA', 'CLIENTE')")
     public ResponseEntity<ClienteSuscripcionResponse> agregarExtra(
             @PathVariable Long clienteId,
             @PathVariable Long extraId) {
