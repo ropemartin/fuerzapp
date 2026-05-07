@@ -27,6 +27,9 @@
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Nombre *</mat-label>
                   <input matInput formControlName="nombre" placeholder="ej: Mensual" />
+                  @if (formTipo.get('nombre')?.hasError('required')) {
+                    <mat-error>El nombre es obligatorio</mat-error>
+                  }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
@@ -39,12 +42,22 @@
                     <mat-label>Precio (€) *</mat-label>
                     <input matInput type="number" formControlName="precio" min="0.01" step="0.01" />
                     <span matSuffix>€</span>
+                    @if (formTipo.get('precio')?.hasError('required')) {
+                      <mat-error>El precio es obligatorio</mat-error>
+                    } @else if (formTipo.get('precio')?.hasError('min')) {
+                      <mat-error>El precio debe ser mayor que 0</mat-error>
+                    }
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
                     <mat-label>Duración (días) *</mat-label>
                     <input matInput type="number" formControlName="duracionDias" min="1" />
                     <span matSuffix>días</span>
+                    @if (formTipo.get('duracionDias')?.hasError('required')) {
+                      <mat-error>La duración es obligatoria</mat-error>
+                    } @else if (formTipo.get('duracionDias')?.hasError('min')) {
+                      <mat-error>Mínimo 1 día</mat-error>
+                    }
                   </mat-form-field>
                 </div>
 
@@ -126,6 +139,9 @@
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Nombre *</mat-label>
                   <input matInput formControlName="nombre" placeholder="ej: Entrenamiento personal" />
+                  @if (formExtra.get('nombre')?.hasError('required')) {
+                    <mat-error>El nombre es obligatorio</mat-error>
+                  }
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Descripción</mat-label>
@@ -135,6 +151,11 @@
                   <mat-label>Precio (€) *</mat-label>
                   <input matInput type="number" formControlName="precio" min="0.01" step="0.01" />
                   <span matSuffix>€</span>
+                  @if (formExtra.get('precio')?.hasError('required')) {
+                    <mat-error>El precio es obligatorio</mat-error>
+                  } @else if (formExtra.get('precio')?.hasError('min')) {
+                    <mat-error>El precio debe ser mayor que 0</mat-error>
+                  }
                 </mat-form-field>
                 <div class="form-actions">
                   @if (editandoExtra) {

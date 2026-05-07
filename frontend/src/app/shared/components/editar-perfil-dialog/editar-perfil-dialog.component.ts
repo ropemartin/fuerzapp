@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Usuario, PerfilUsuarioRequest } from '../../../core/models/usuario.model';
+import { NOMBRE_PATTERN, TELEFONO_PATTERN } from '../../../core/validators/app.validators';
 
 export interface EditarPerfilDialogData {
   usuario: Usuario;
@@ -34,6 +35,8 @@ export interface EditarPerfilDialogData {
           <input matInput formControlName="nombre" />
           @if (form.get('nombre')?.hasError('required')) {
             <mat-error>El nombre es obligatorio</mat-error>
+          } @else if (form.get('nombre')?.hasError('pattern')) {
+            <mat-error>Solo se permiten letras</mat-error>
           }
         </mat-form-field>
 
@@ -42,6 +45,8 @@ export interface EditarPerfilDialogData {
           <input matInput formControlName="apellidos" />
           @if (form.get('apellidos')?.hasError('required')) {
             <mat-error>Los apellidos son obligatorios</mat-error>
+          } @else if (form.get('apellidos')?.hasError('pattern')) {
+            <mat-error>Solo se permiten letras</mat-error>
           }
         </mat-form-field>
 
@@ -58,6 +63,9 @@ export interface EditarPerfilDialogData {
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Teléfono</mat-label>
           <input matInput formControlName="telefono" />
+          @if (form.get('telefono')?.hasError('pattern')) {
+            <mat-error>Introduce entre 9 y 15 dígitos</mat-error>
+          }
         </mat-form-field>
       </form>
     </mat-dialog-content>
@@ -90,10 +98,10 @@ export class EditarPerfilDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: EditarPerfilDialogData
   ) {
     this.form = this.fb.group({
-      nombre:    [data.usuario.nombre,    Validators.required],
-      apellidos: [data.usuario.apellidos, Validators.required],
+      nombre:    [data.usuario.nombre,    [Validators.required, Validators.pattern(NOMBRE_PATTERN)]],
+      apellidos: [data.usuario.apellidos, [Validators.required, Validators.pattern(NOMBRE_PATTERN)]],
       email:     [data.usuario.email,     [Validators.required, Validators.email]],
-      telefono:  [data.usuario.telefono ?? '']
+      telefono:  [data.usuario.telefono ?? '', Validators.pattern(TELEFONO_PATTERN)]
     });
   }
 

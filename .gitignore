@@ -29,6 +29,7 @@ frontend/.angular/
 
 # ─── Documentación local ─────────────────────────────────────────────────────
 docs/
+CLAUDE.md
 
 # ─── Sistema operativo ────────────────────────────────────────────────────────
 .DS_Store

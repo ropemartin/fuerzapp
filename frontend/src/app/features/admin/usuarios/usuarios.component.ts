@@ -15,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LayoutComponent, NavItem } from '../../../shared/components/layout/layout.component';
 import { AdminService, UsuarioAdminRequest } from '../../../core/services/admin.service';
 import { Usuario, Rol } from '../../../core/models/usuario.model';
+import { NOMBRE_PATTERN, TELEFONO_PATTERN } from '../../../core/validators/app.validators';
 
 @Component({
   selector: 'app-usuario-dialog',
@@ -35,15 +36,19 @@ import { Usuario, Rol } from '../../../core/models/usuario.model';
           <mat-form-field appearance="outline">
             <mat-label>Nombre *</mat-label>
             <input matInput formControlName="nombre" />
-            @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+            @if (form.get('nombre')?.hasError('required')) {
               <mat-error>Obligatorio</mat-error>
+            } @else if (form.get('nombre')?.hasError('pattern')) {
+              <mat-error>Solo se permiten letras</mat-error>
             }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Apellidos *</mat-label>
             <input matInput formControlName="apellidos" />
-            @if (form.get('apellidos')?.hasError('required') && form.get('apellidos')?.touched) {
+            @if (form.get('apellidos')?.hasError('required')) {
               <mat-error>Obligatorio</mat-error>
+            } @else if (form.get('apellidos')?.hasError('pattern')) {
+              <mat-error>Solo se permiten letras</mat-error>
             }
           </mat-form-field>
         </div>
@@ -68,6 +73,9 @@ import { Usuario, Rol } from '../../../core/models/usuario.model';
           <mat-form-field appearance="outline">
             <mat-label>Teléfono</mat-label>
             <input matInput formControlName="telefono" />
+            @if (form.get('telefono')?.hasError('pattern')) {
+              <mat-error>Introduce entre 9 y 15 dígitos</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Rol *</mat-label>
@@ -106,11 +114,11 @@ export class UsuarioDialogComponent {
   ) {
     const passValidators = data ? [Validators.minLength(6)] : [Validators.required, Validators.minLength(6)];
     this.form = this.fb.group({
-      nombre:    [data?.nombre    ?? '', Validators.required],
-      apellidos: [data?.apellidos ?? '', Validators.required],
+      nombre:    [data?.nombre    ?? '', [Validators.required, Validators.pattern(NOMBRE_PATTERN)]],
+      apellidos: [data?.apellidos ?? '', [Validators.required, Validators.pattern(NOMBRE_PATTERN)]],
       email:     [data?.email     ?? '', [Validators.required, Validators.email]],
       password:  ['', passValidators],
-      telefono:  [data?.telefono  ?? ''],
+      telefono:  [data?.telefono  ?? '', Validators.pattern(TELEFONO_PATTERN)],
       rol:       [data?.rol       ?? '', Validators.required]
     });
   }

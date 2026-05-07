@@ -145,24 +145,39 @@
                   <mat-form-field appearance="outline">
                     <mat-label>Orden</mat-label>
                     <input matInput type="number" formControlName="orden" min="1" />
+                    @if (formEjercicio.get('orden')?.hasError('min')) {
+                      <mat-error>Mínimo 1</mat-error>
+                    }
                   </mat-form-field>
                   <mat-form-field appearance="outline">
                     <mat-label>Series</mat-label>
                     <input matInput type="number" formControlName="series" min="1" />
+                    @if (formEjercicio.get('series')?.hasError('min')) {
+                      <mat-error>Mínimo 1</mat-error>
+                    }
                   </mat-form-field>
                   <mat-form-field appearance="outline">
                     <mat-label>Reps</mat-label>
                     <input matInput type="number" formControlName="repeticiones" min="1" />
+                    @if (formEjercicio.get('repeticiones')?.hasError('min')) {
+                      <mat-error>Mínimo 1</mat-error>
+                    }
                   </mat-form-field>
                 </div>
                 <div class="fila-2">
                   <mat-form-field appearance="outline">
                     <mat-label>Duración (seg)</mat-label>
                     <input matInput type="number" formControlName="duracionSegundos" />
+                    @if (formEjercicio.get('duracionSegundos')?.hasError('min')) {
+                      <mat-error>Debe ser mayor que 0</mat-error>
+                    }
                   </mat-form-field>
                   <mat-form-field appearance="outline">
                     <mat-label>Descanso (seg)</mat-label>
                     <input matInput type="number" formControlName="descansoSegundos" />
+                    @if (formEjercicio.get('descansoSegundos')?.hasError('min')) {
+                      <mat-error>No puede ser negativo</mat-error>
+                    }
                   </mat-form-field>
                 </div>
                 <mat-form-field appearance="outline" class="full-width">
@@ -221,16 +236,27 @@
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Fecha y hora *</mat-label>
                     <input matInput type="datetime-local" formControlName="fechaHora" />
+                    @if (formSesion.get('fechaHora')?.hasError('required')) {
+                      <mat-error>La fecha es obligatoria</mat-error>
+                    } @else if (formSesion.get('fechaHora')?.hasError('fechaPasada')) {
+                      <mat-error>La fecha debe ser futura</mat-error>
+                    }
                   </mat-form-field>
                   <div class="fila-2">
                     <mat-form-field appearance="outline">
                       <mat-label>Duración (min)</mat-label>
                       <input matInput type="number" formControlName="duracionMinutos" />
+                      @if (formSesion.get('duracionMinutos')?.hasError('min')) {
+                        <mat-error>Mínimo 1 minuto</mat-error>
+                      }
                     </mat-form-field>
                     @if (seleccionado.tipo === 'GRUPAL') {
                       <mat-form-field appearance="outline">
                         <mat-label>Plazas máx.</mat-label>
                         <input matInput type="number" formControlName="capacidadMaxima" />
+                        @if (formSesion.get('capacidadMaxima')?.hasError('min')) {
+                          <mat-error>Mínimo 1 plaza</mat-error>
+                        }
                       </mat-form-field>
                     }
                   </div>

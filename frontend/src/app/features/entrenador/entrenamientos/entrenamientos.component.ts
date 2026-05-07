@@ -22,6 +22,7 @@ import { GimnasioContextService } from '../../../core/services/gimnasio-context.
 import { Entrenamiento, EntrenamientoRequest, Sesion, TipoEntrenamiento } from '../../../core/models/entrenamiento.model';
 import { Ejercicio } from '../../../core/models/ejercicio.model';
 import { Usuario } from '../../../core/models/usuario.model';
+import { fechaFuturaValidator } from '../../../core/validators/app.validators';
 
 @Component({
   selector: 'app-entrenamientos',
@@ -88,18 +89,18 @@ export class EntrenamientosComponent implements OnInit {
     this.formEjercicio = this.fb.group({
       ejercicioId: [null, Validators.required],
       orden: [1, [Validators.required, Validators.min(1)]],
-      series: [3],
-      repeticiones: [10],
-      duracionSegundos: [null],
-      descansoSegundos: [60],
+      series: [3, Validators.min(1)],
+      repeticiones: [10, Validators.min(1)],
+      duracionSegundos: [null, Validators.min(1)],
+      descansoSegundos: [60, Validators.min(0)],
       notas: ['']
     });
 
     this.formSesion = this.fb.group({
-      fechaHora: ['', Validators.required],
-      duracionMinutos: [60],
+      fechaHora: ['', [Validators.required, fechaFuturaValidator]],
+      duracionMinutos: [60, Validators.min(1)],
       ubicacion: [''],
-      capacidadMaxima: [null]
+      capacidadMaxima: [null, Validators.min(1)]
     });
 
     this.formAsignar = this.fb.group({

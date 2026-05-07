@@ -14,6 +14,7 @@ import { LayoutComponent, NavItem } from '../../../shared/components/layout/layo
 import { EjercicioService } from '../../../core/services/ejercicio.service';
 import { GimnasioContextService } from '../../../core/services/gimnasio-context.service';
 import { Ejercicio } from '../../../core/models/ejercicio.model';
+import { URL_PATTERN } from '../../../core/validators/app.validators';
 
 @Component({
   selector: 'app-ejercicios',
@@ -69,7 +70,7 @@ export class EjerciciosComponent implements OnInit {
       descripcion:   [''],
       grupoMuscular: ['', Validators.required],
       dificultad:    ['', Validators.required],
-      videoUrl:      ['']
+      videoUrl:      ['', Validators.pattern(URL_PATTERN)]
     });
   }
 

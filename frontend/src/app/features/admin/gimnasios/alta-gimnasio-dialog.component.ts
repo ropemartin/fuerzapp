@@ -10,6 +10,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GimnasioService } from '../../../core/services/gimnasio.service';
+import { NOMBRE_PATTERN, TELEFONO_PATTERN } from '../../../core/validators/app.validators';
 
 @Component({
   selector: 'app-alta-gimnasio-dialog',
@@ -46,16 +47,16 @@ export class AltaGimnasioDialogComponent {
       nombre: ['', Validators.required],
       direccion: [''],
       ciudad: [''],
-      telefono: [''],
+      telefono: ['', Validators.pattern(TELEFONO_PATTERN)],
       email: ['', Validators.email]
     });
 
     this.formPropietario = this.fb.group({
-      nombre: ['', Validators.required],
-      apellidos: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.pattern(NOMBRE_PATTERN)]],
+      apellidos: ['', [Validators.required, Validators.pattern(NOMBRE_PATTERN)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      telefono: ['']
+      telefono: ['', Validators.pattern(TELEFONO_PATTERN)]
     });
   }
 

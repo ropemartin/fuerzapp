@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { TELEFONO_PATTERN } from '../../../core/validators/app.validators';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,10 +55,16 @@ import { AltaGimnasioDialogComponent } from './alta-gimnasio-dialog.component';
           <mat-form-field appearance="outline">
             <mat-label>Teléfono</mat-label>
             <input matInput formControlName="telefono" />
+            @if (form.get('telefono')?.hasError('pattern')) {
+              <mat-error>Introduce entre 9 y 15 dígitos</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
             <input matInput type="email" formControlName="email" />
+            @if (form.get('email')?.hasError('email')) {
+              <mat-error>Email no válido</mat-error>
+            }
           </mat-form-field>
         </div>
         <mat-form-field appearance="outline" class="full-width">
@@ -98,8 +105,8 @@ export class EditarGimnasioDialogComponent implements OnInit {
       nombre:        [data.nombre,           Validators.required],
       ciudad:        [data.ciudad        ?? ''],
       direccion:     [data.direccion     ?? ''],
-      telefono:      [data.telefono      ?? ''],
-      email:         [data.email         ?? ''],
+      telefono:      [data.telefono      ?? '', Validators.pattern(TELEFONO_PATTERN)],
+      email:         [data.email         ?? '', Validators.email],
       propietarioId: [data.propietarioId ?? null]
     });
   }
