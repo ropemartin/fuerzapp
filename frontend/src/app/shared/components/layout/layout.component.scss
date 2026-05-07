@@ -6,6 +6,18 @@
   width: 240px;
   background: #1a1a2e;
   border-right: none;
+
+  // CSS custom properties for Angular Material 19 MDC list items
+  --mdc-list-list-item-label-text-color: rgba(255, 255, 255, 0.75);
+  --mdc-list-list-item-supporting-text-color: rgba(255, 255, 255, 0.5);
+  --mdc-list-list-item-leading-icon-color: rgba(255, 255, 255, 0.5);
+  --mdc-list-list-item-trailing-supporting-text-color: rgba(255, 255, 255, 0.5);
+  --mdc-list-list-item-hover-label-text-color: white;
+  --mdc-list-list-item-hover-leading-icon-color: rgba(255, 255, 255, 0.85);
+  --mdc-list-list-item-hover-state-layer-color: rgba(255, 255, 255, 0.06);
+  --mdc-list-list-item-focus-state-layer-color: rgba(255, 255, 255, 0.06);
+  --mdc-list-list-item-focus-label-text-color: rgba(255, 255, 255, 0.75);
+  --mat-list-active-indicator-color: rgba(25, 118, 210, 0.25);
 }
 
 .sidenav-header {
@@ -33,21 +45,13 @@
 
 mat-nav-list {
   a {
-    color: rgba(255, 255, 255, 0.7) !important;
     border-radius: 8px;
     margin: 2px 8px;
 
-    mat-icon {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
     &.active-link {
       background: rgba(25, 118, 210, 0.25) !important;
-      color: white !important;
-
-      mat-icon {
-        color: #1976d2;
-      }
+      --mdc-list-list-item-label-text-color: white;
+      --mdc-list-list-item-leading-icon-color: #42a5f5;
     }
 
     &:hover:not(.active-link) {
