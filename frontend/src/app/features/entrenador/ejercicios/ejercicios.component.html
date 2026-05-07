@@ -6,18 +6,21 @@
     <div class="page-header">
       <div class="header-left">
         <h2>Biblioteca de ejercicios</h2>
-        <p class="subtitulo">Ejercicios predefinidos de la plataforma y propios del gimnasio</p>
+        <p class="subtitulo">Biblioteca de ejercicios del gimnasio</p>
       </div>
-      <button mat-flat-button color="primary" (click)="creando = !creando">
+      <button mat-flat-button color="primary" (click)="nuevoEjercicio()">
         <mat-icon>add</mat-icon> Nuevo ejercicio
       </button>
     </div>
 
-    <!-- ── FORMULARIO NUEVO ── -->
+    <!-- ── FORMULARIO CREAR / EDITAR ── -->
     @if (creando) {
       <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>{{ editando ? 'Editar ejercicio' : 'Nuevo ejercicio' }}</mat-card-title>
+        </mat-card-header>
         <mat-card-content>
-          <form [formGroup]="form" (ngSubmit)="crear()">
+          <form [formGroup]="form" (ngSubmit)="guardar()">
             <div class="fila-2">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Nombre *</mat-label>
@@ -57,9 +60,10 @@
               <textarea matInput formControlName="descripcion" rows="2"></textarea>
             </mat-form-field>
             <div class="form-actions">
-              <button mat-stroked-button type="button" (click)="creando = false">Cancelar</button>
+              <button mat-stroked-button type="button" (click)="cancelarEdicion()">Cancelar</button>
               <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
-                Crear ejercicio
+                <mat-icon>save</mat-icon>
+                {{ editando ? 'Guardar cambios' : 'Crear ejercicio' }}
               </button>
             </div>
           </form>
@@ -89,21 +93,21 @@
     } @else {
       <div class="grid-ejercicios">
         @for (e of ejerciciosFiltrados; track e.id) {
-          <mat-card class="card-ejercicio" [class.predefinido]="e.esPredefinido">
+          <mat-card class="card-ejercicio">
             <mat-card-content>
               <div class="card-header-ej">
                 <div class="chips-row">
                   <span class="chip-grupo chip-{{ e.grupoMuscular.toLowerCase() }}">{{ e.grupoMuscular }}</span>
                   <span class="chip-dif chip-{{ e.dificultad?.toLowerCase() }}">{{ e.dificultad }}</span>
-                  @if (e.esPredefinido) {
-                    <span class="chip-plataforma">Plataforma</span>
-                  }
                 </div>
-                @if (!e.esPredefinido) {
+                <div class="acciones-card">
+                  <button mat-icon-button (click)="editar(e)" matTooltip="Editar">
+                    <mat-icon>edit</mat-icon>
+                  </button>
                   <button mat-icon-button color="warn" (click)="eliminar(e)" matTooltip="Eliminar">
                     <mat-icon>delete</mat-icon>
                   </button>
-                }
+                </div>
               </div>
               <strong class="nombre-ej">{{ e.nombre }}</strong>
               @if (e.descripcion) {

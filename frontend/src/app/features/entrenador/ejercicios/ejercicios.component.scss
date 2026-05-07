@@ -51,8 +51,6 @@
 
   &:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
 
-  &.predefinido { border-left: 3px solid #1976d2; }
-
   mat-card-content { padding: 14px 16px !important; }
 }
 
@@ -61,6 +59,12 @@
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 8px;
+}
+
+.acciones-card {
+  display: flex;
+  gap: 0;
+  margin: -4px -8px -4px 0;
 }
 
 .chips-row {
@@ -97,17 +101,12 @@
 
 // ── Chips ─────────────────────────────────────────────────────────────────────
 
-.chip-grupo, .chip-dif, .chip-plataforma {
+.chip-grupo, .chip-dif {
   display: inline-block;
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 0.7rem;
   font-weight: 600;
-}
-
-.chip-plataforma {
-  background: #e3f2fd;
-  color: #1565c0;
 }
 
 .chip-dif {

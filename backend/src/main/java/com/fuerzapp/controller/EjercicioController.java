@@ -19,15 +19,6 @@ public class EjercicioController {
 
     private final EjercicioService ejercicioService;
 
-    // Biblioteca global predefinida (accesible para todos los autenticados)
-    @GetMapping("/api/ejercicios")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<EjercicioResponse>> listarPredefinidos() {
-        return ResponseEntity.ok(ejercicioService.listarPredefinidos());
-    }
-
-    // Todos los ejercicios disponibles para un gimnasio (globales + propios)
-    // Filtro opcional por grupo muscular: ?grupoMuscular=PECHO
     @GetMapping("/api/gimnasios/{gimnasioId}/ejercicios")
     @PreAuthorize("hasAnyRole('ENTRENADOR', 'PROPIETARIO', 'ADMIN_PLATAFORMA')")
     public ResponseEntity<List<EjercicioResponse>> listarPorGimnasio(
@@ -36,14 +27,12 @@ public class EjercicioController {
         return ResponseEntity.ok(ejercicioService.listarDisponiblesPorGimnasio(gimnasioId, grupoMuscular));
     }
 
-    // Detalle de un ejercicio
     @GetMapping("/api/ejercicios/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<EjercicioResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(ejercicioService.obtenerPorId(id));
     }
 
-    // El entrenador crea un ejercicio en su gimnasio
     @PostMapping("/api/gimnasios/{gimnasioId}/ejercicios")
     @PreAuthorize("hasAnyRole('ENTRENADOR', 'PROPIETARIO', 'ADMIN_PLATAFORMA')")
     public ResponseEntity<EjercicioResponse> crear(
@@ -54,7 +43,6 @@ public class EjercicioController {
         );
     }
 
-    // Editar un ejercicio (solo los propios del gimnasio, no los predefinidos)
     @PutMapping("/api/ejercicios/{id}")
     @PreAuthorize("hasAnyRole('ENTRENADOR', 'PROPIETARIO', 'ADMIN_PLATAFORMA')")
     public ResponseEntity<EjercicioResponse> actualizar(
@@ -63,7 +51,6 @@ public class EjercicioController {
         return ResponseEntity.ok(ejercicioService.actualizar(id, request));
     }
 
-    // Eliminar un ejercicio (no se pueden eliminar los predefinidos)
     @DeleteMapping("/api/ejercicios/{id}")
     @PreAuthorize("hasAnyRole('ENTRENADOR', 'PROPIETARIO', 'ADMIN_PLATAFORMA')")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {

@@ -55,6 +55,7 @@ export class EjerciciosComponent implements OnInit {
   ejercicios: Ejercicio[] = [];
   cargando = true;
   creando = false;
+  editando: Ejercicio | null = null;
   filtroGrupo = '';
 
   form: FormGroup;
@@ -92,25 +93,55 @@ export class EjerciciosComponent implements OnInit {
     return this.ejercicios.filter(e => e.grupoMuscular === this.filtroGrupo);
   }
 
-  crear(): void {
-    if (this.form.invalid) return;
-    const id = this.contexto.obtenerIdOFail();
-    this.ejercicioService.crear(id, this.form.value).subscribe({
-      next: () => {
-        this.snack.open('Ejercicio creado', 'Cerrar', { duration: 3000 });
-        this.form.reset();
-        this.creando = false;
-        this.cargar();
-      },
-      error: () => this.snack.open('Error al crear ejercicio', 'Cerrar', { duration: 3000 })
+  nuevoEjercicio(): void {
+    this.editando = null;
+    this.form.reset();
+    this.creando = true;
+  }
+
+  editar(ejercicio: Ejercicio): void {
+    this.editando = ejercicio;
+    this.form.patchValue({
+      nombre:        ejercicio.nombre,
+      descripcion:   ejercicio.descripcion ?? '',
+      grupoMuscular: ejercicio.grupoMuscular,
+      dificultad:    ejercicio.dificultad,
+      videoUrl:      ejercicio.videoUrl ?? ''
     });
+    this.creando = true;
+  }
+
+  guardar(): void {
+    if (this.form.invalid) return;
+    if (this.editando) {
+      this.ejercicioService.actualizar(this.editando.id, this.form.value).subscribe({
+        next: () => {
+          this.snack.open('Ejercicio actualizado', 'Cerrar', { duration: 3000 });
+          this.cancelarEdicion();
+          this.cargar();
+        },
+        error: () => this.snack.open('Error al actualizar ejercicio', 'Cerrar', { duration: 3000 })
+      });
+    } else {
+      const id = this.contexto.obtenerIdOFail();
+      this.ejercicioService.crear(id, this.form.value).subscribe({
+        next: () => {
+          this.snack.open('Ejercicio creado', 'Cerrar', { duration: 3000 });
+          this.cancelarEdicion();
+          this.cargar();
+        },
+        error: () => this.snack.open('Error al crear ejercicio', 'Cerrar', { duration: 3000 })
+      });
+    }
+  }
+
+  cancelarEdicion(): void {
+    this.form.reset();
+    this.creando = false;
+    this.editando = null;
   }
 
   eliminar(ejercicio: Ejercicio): void {
-    if (ejercicio.esPredefinido) {
-      this.snack.open('No se pueden eliminar ejercicios predefinidos', 'Cerrar', { duration: 3000 });
-      return;
-    }
     const id = this.contexto.obtenerIdOFail();
     this.ejercicioService.eliminar(ejercicio.id).subscribe({
       next: () => {

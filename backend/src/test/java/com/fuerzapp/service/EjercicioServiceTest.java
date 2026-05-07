@@ -41,8 +41,7 @@ class EjercicioServiceTest {
 
     private Gimnasio gimnasio;
     private Usuario entrenador;
-    private Ejercicio ejercicioPropio;
-    private Ejercicio ejercicioPredefinido;
+    private Ejercicio ejercicio;
 
     @BeforeEach
     void setUp() {
@@ -56,41 +55,23 @@ class EjercicioServiceTest {
         entrenador.setApellidos("García");
         entrenador.setEmail("ana@fitgym.com");
 
-        ejercicioPropio = new Ejercicio();
-        ejercicioPropio.setId(10L);
-        ejercicioPropio.setNombre("Press banca");
-        ejercicioPropio.setEsPredefinido(false);
-        ejercicioPropio.setGimnasio(gimnasio);
-        ejercicioPropio.setCreadoPor(entrenador);
-
-        ejercicioPredefinido = new Ejercicio();
-        ejercicioPredefinido.setId(1L);
-        ejercicioPredefinido.setNombre("Sentadilla");
-        ejercicioPredefinido.setEsPredefinido(true);
+        ejercicio = new Ejercicio();
+        ejercicio.setId(10L);
+        ejercicio.setNombre("Press banca");
+        ejercicio.setGimnasio(gimnasio);
+        ejercicio.setCreadoPor(entrenador);
     }
 
     // ─── eliminar ─────────────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("eliminar: ejercicio predefinido lanza excepción")
-    void eliminar_ejercicioPredefinido_lanzaExcepcion() {
-        when(ejercicioRepository.findById(1L)).thenReturn(Optional.of(ejercicioPredefinido));
-
-        assertThatThrownBy(() -> ejercicioService.eliminar(1L))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("No se pueden eliminar ejercicios de la biblioteca global");
-
-        verify(ejercicioRepository, never()).delete(any());
-    }
-
-    @Test
-    @DisplayName("eliminar: ejercicio propio se elimina correctamente")
-    void eliminar_ejercicioPropio_eliminaCorrectamente() {
-        when(ejercicioRepository.findById(10L)).thenReturn(Optional.of(ejercicioPropio));
+    @DisplayName("eliminar: ejercicio existente se elimina correctamente")
+    void eliminar_ejercicioExistente_eliminaCorrectamente() {
+        when(ejercicioRepository.findById(10L)).thenReturn(Optional.of(ejercicio));
 
         ejercicioService.eliminar(10L);
 
-        verify(ejercicioRepository).delete(ejercicioPropio);
+        verify(ejercicioRepository).delete(ejercicio);
     }
 
     @Test
@@ -108,41 +89,27 @@ class EjercicioServiceTest {
     @Test
     @DisplayName("listar disponibles: sin filtro usa query sin grupo muscular")
     void listarDisponibles_sinFiltroGrupoMuscular_retornaTodos() {
-        when(ejercicioRepository.findDisponiblesByGimnasioId(1L))
-                .thenReturn(List.of(ejercicioPropio, ejercicioPredefinido));
+        when(ejercicioRepository.findByGimnasioId(1L)).thenReturn(List.of(ejercicio));
 
         List<EjercicioResponse> resultado = ejercicioService.listarDisponiblesPorGimnasio(1L, null);
 
-        assertThat(resultado).hasSize(2);
-        verify(ejercicioRepository).findDisponiblesByGimnasioId(1L);
-        verify(ejercicioRepository, never()).findDisponiblesByGimnasioIdAndGrupoMuscular(any(), any());
+        assertThat(resultado).hasSize(1);
+        verify(ejercicioRepository).findByGimnasioId(1L);
+        verify(ejercicioRepository, never()).findByGimnasioIdAndGrupoMuscular(any(), any());
     }
 
     @Test
     @DisplayName("listar disponibles: con filtro usa query con grupo muscular")
     void listarDisponibles_conFiltroGrupoMuscular_aplicaFiltro() {
-        when(ejercicioRepository.findDisponiblesByGimnasioIdAndGrupoMuscular(1L, GrupoMuscular.PECHO))
-                .thenReturn(List.of(ejercicioPropio));
+        when(ejercicioRepository.findByGimnasioIdAndGrupoMuscular(1L, GrupoMuscular.PECHO))
+                .thenReturn(List.of(ejercicio));
 
         List<EjercicioResponse> resultado =
                 ejercicioService.listarDisponiblesPorGimnasio(1L, GrupoMuscular.PECHO);
 
         assertThat(resultado).hasSize(1);
-        verify(ejercicioRepository).findDisponiblesByGimnasioIdAndGrupoMuscular(1L, GrupoMuscular.PECHO);
-        verify(ejercicioRepository, never()).findDisponiblesByGimnasioId(any());
-    }
-
-    // ─── listarPredefinidos ───────────────────────────────────────────────────
-
-    @Test
-    @DisplayName("listar predefinidos: retorna solo ejercicios de la biblioteca global")
-    void listarPredefinidos_retornaPredefinidos() {
-        when(ejercicioRepository.findByEsPredefinidoTrue()).thenReturn(List.of(ejercicioPredefinido));
-
-        List<EjercicioResponse> resultado = ejercicioService.listarPredefinidos();
-
-        assertThat(resultado).hasSize(1);
-        assertThat(resultado.get(0).isEsPredefinido()).isTrue();
+        verify(ejercicioRepository).findByGimnasioIdAndGrupoMuscular(1L, GrupoMuscular.PECHO);
+        verify(ejercicioRepository, never()).findByGimnasioId(any());
     }
 
     // ─── crearEjercicioEnGimnasio ─────────────────────────────────────────────
@@ -158,7 +125,6 @@ class EjercicioServiceTest {
         Ejercicio guardado = new Ejercicio();
         guardado.setId(20L);
         guardado.setNombre("Remo con barra");
-        guardado.setEsPredefinido(false);
         guardado.setGimnasio(gimnasio);
         guardado.setCreadoPor(entrenador);
 
@@ -176,7 +142,7 @@ class EjercicioServiceTest {
             EjercicioResponse response = ejercicioService.crearEjercicioEnGimnasio(1L, request);
 
             assertThat(response.getNombre()).isEqualTo("Remo con barra");
-            assertThat(response.isEsPredefinido()).isFalse();
+            assertThat(response.getGimnasioId()).isEqualTo(1L);
         }
     }
 
@@ -188,5 +154,34 @@ class EjercicioServiceTest {
         assertThatThrownBy(() -> ejercicioService.crearEjercicioEnGimnasio(99L, new EjercicioRequest()))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Gimnasio no encontrado con id: 99");
+    }
+
+    // ─── actualizar ───────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("actualizar: ejercicio existente actualiza y retorna response")
+    void actualizar_ejercicioExistente_actualizaDatos() {
+        EjercicioRequest request = new EjercicioRequest();
+        request.setNombre("Press banca modificado");
+        request.setGrupoMuscular(GrupoMuscular.PECHO);
+
+        when(ejercicioRepository.findById(10L)).thenReturn(Optional.of(ejercicio));
+        when(ejercicioRepository.save(any(Ejercicio.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        EjercicioResponse response = ejercicioService.actualizar(10L, request);
+
+        assertThat(response.getNombre()).isEqualTo("Press banca modificado");
+        assertThat(response.getGrupoMuscular()).isEqualTo(GrupoMuscular.PECHO);
+        verify(ejercicioRepository).save(ejercicio);
+    }
+
+    @Test
+    @DisplayName("actualizar: ejercicio inexistente lanza excepción")
+    void actualizar_ejercicioInexistente_lanzaExcepcion() {
+        when(ejercicioRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> ejercicioService.actualizar(99L, new EjercicioRequest()))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Ejercicio no encontrado con id: 99");
     }
 }

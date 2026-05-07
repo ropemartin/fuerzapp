@@ -37,10 +37,6 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (ejercicioRepository.findByEsPredefinidoTrue().isEmpty()) {
-            ejercicioRepository.saveAll(ejerciciosPredefinidos());
-            System.out.println("✓ Biblioteca de ejercicios predefinidos cargada.");
-        }
         if (usuarioRepository.count() == 0) {
             seedDemoData();
             System.out.println("✓ Datos de ejemplo cargados.");
@@ -174,6 +170,140 @@ public class DataSeeder implements CommandLineRunner {
             crearPagoYFactura(suscripciones[i], precios[i], i + 1);
         }
 
+        // ─── EJERCICIOS — FITGYM ──────────────────────────────────────────────
+        Ejercicio fg_pressBanca    = ej(fitgym, ana,   "Press de banca",              "Empuje horizontal con barra en banco plano.",                         GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+banca+tecnica+correcta");
+        Ejercicio fg_flexiones     = ej(fitgym, ana,   "Flexiones",                   "Empuje con peso corporal, codos a 45°.",                              GrupoMuscular.PECHO,    Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=flexiones+push+up+tecnica+correcta");
+        Ejercicio fg_pressInclin   = ej(fitgym, ana,   "Press inclinado con barra",   "Variante inclinada para trabajar el pecho superior.",                 GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+inclinado+barra+pecho+superior");
+        Ejercicio fg_aperturas     = ej(fitgym, ana,   "Aperturas con mancuernas",    "Aislamiento de pecho en banco plano.",                                GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=aperturas+mancuernas+pecho+tecnica");
+        Ejercicio fg_dominadas     = ej(fitgym, ana,   "Dominadas",                   "Tracción vertical con peso corporal, agarre prono.",                  GrupoMuscular.ESPALDA,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=dominadas+pull+up+tecnica+espalda");
+        Ejercicio fg_remoBarra     = ej(fitgym, ana,   "Remo con barra",              "Tracción horizontal con barra, torso inclinado.",                     GrupoMuscular.ESPALDA,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=remo+con+barra+espalda+tecnica");
+        Ejercicio fg_jalón         = ej(fitgym, ana,   "Jalón al pecho",              "Tracción vertical en polea alta.",                                    GrupoMuscular.ESPALDA,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=jalon+al+pecho+polea+alta+espalda");
+        Ejercicio fg_pesoMuerto    = ej(fitgym, ana,   "Peso muerto",                 "Cadena posterior completa, técnica imprescindible.",                  GrupoMuscular.ESPALDA,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=peso+muerto+deadlift+tecnica+correcta");
+        Ejercicio fg_remoMancuerna = ej(fitgym, ana,   "Remo con mancuerna",          "Remo unilateral apoyado en banco para mayor rango de movimiento.",    GrupoMuscular.ESPALDA,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=remo+mancuerna+unilateral+espalda");
+        Ejercicio fg_sentadilla    = ej(fitgym, pedro, "Sentadilla con barra",        "Ejercicio rey del tren inferior.",                                    GrupoMuscular.PIERNAS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=sentadilla+barra+squat+tecnica+correcta");
+        Ejercicio fg_prensa        = ej(fitgym, pedro, "Prensa de piernas",           "Empuje de piernas en máquina, variando ángulo.",                      GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=prensa+piernas+leg+press+tecnica");
+        Ejercicio fg_zancadas      = ej(fitgym, pedro, "Zancadas",                    "Ejercicio unilateral para cuádriceps y glúteos.",                     GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=zancadas+lunges+piernas+tecnica");
+        Ejercicio fg_curlFemoral   = ej(fitgym, pedro, "Curl femoral",                "Aislamiento de isquiotibiales en máquina.",                           GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=curl+femoral+leg+curl+isquiotibiales");
+        Ejercicio fg_sentGoblet    = ej(fitgym, pedro, "Sentadilla goblet",           "Sentadilla frontal sosteniendo una mancuerna, ideal para técnica.",   GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=sentadilla+goblet+mancuerna+tecnica");
+        Ejercicio fg_pressMilitar  = ej(fitgym, pedro, "Press militar",               "Empuje vertical para hombros con barra.",                             GrupoMuscular.HOMBROS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+militar+overhead+press+hombros");
+        Ejercicio fg_elevLateral   = ej(fitgym, pedro, "Elevaciones laterales",       "Aislamiento del deltoides lateral.",                                  GrupoMuscular.HOMBROS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=elevaciones+laterales+deltoides+hombros");
+        Ejercicio fg_pajaro        = ej(fitgym, pedro, "Pájaro",                      "Aislamiento del deltoides posterior en inclinación.",                 GrupoMuscular.HOMBROS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=pajaro+deltoides+posterior+rear+delt+fly");
+        Ejercicio fg_curlBarra     = ej(fitgym, ana,   "Curl con barra",              "Flexión de codo con barra recta.",                                    GrupoMuscular.BICEPS,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=curl+biceps+barra+recta+tecnica");
+        Ejercicio fg_curlMartillo  = ej(fitgym, ana,   "Curl martillo",               "Trabaja bíceps y braquiorradial con agarre neutro.",                  GrupoMuscular.BICEPS,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=curl+martillo+hammer+curl+biceps");
+        Ejercicio fg_fondos        = ej(fitgym, pedro, "Fondos en paralelas",         "Empuje con peso corporal para tríceps y pecho.",                      GrupoMuscular.TRICEPS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=fondos+paralelas+triceps+tecnica");
+        Ejercicio fg_pressFrances  = ej(fitgym, pedro, "Press francés",               "Aislamiento de tríceps con barra EZ tumbado.",                        GrupoMuscular.TRICEPS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+frances+skull+crusher+triceps");
+        Ejercicio fg_extTriPolea   = ej(fitgym, ana,   "Extensión de tríceps polea",  "Aislamiento de tríceps en polea alta.",                               GrupoMuscular.TRICEPS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=extension+triceps+polea+alta+aislamiento");
+        Ejercicio fg_plancha       = ej(fitgym, ana,   "Plancha",                     "Ejercicio isométrico de core, columna neutra.",                       GrupoMuscular.ABDOMEN,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=plancha+plank+core+isometrico+tecnica");
+        Ejercicio fg_crunch        = ej(fitgym, ana,   "Crunch abdominal",            "Flexión de tronco controlada.",                                       GrupoMuscular.ABDOMEN,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=crunch+abdominal+tecnica+correcta");
+        Ejercicio fg_rueda         = ej(fitgym, ana,   "Rueda abdominal",             "Extensión de core avanzada con rueda.",                               GrupoMuscular.ABDOMEN,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=rueda+abdominal+ab+wheel+rollout+core");
+        Ejercicio fg_hipThrust     = ej(fitgym, pedro, "Hip thrust",                  "Empuje de cadera con barra para glúteos.",                            GrupoMuscular.GLUTEOS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=hip+thrust+gluteos+barra+tecnica");
+        Ejercicio fg_patadaGluteo  = ej(fitgym, pedro, "Patada de glúteo",            "Extensión de cadera unilateral en polea o máquina.",                  GrupoMuscular.GLUTEOS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=patada+gluteo+glute+kickback+polea");
+        Ejercicio fg_cinta         = ej(fitgym, pedro, "Carrera en cinta",            "Cardio aeróbico continuo o en intervalos.",                           GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=correr+cinta+treadmill+cardio+tecnica");
+        Ejercicio fg_burpees       = ej(fitgym, pedro, "Burpees",                     "Ejercicio de alta intensidad: sentadilla, plancha y salto.",           GrupoMuscular.CARDIO,   Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=burpees+tecnica+correcta+hiit");
+        Ejercicio fg_comba         = ej(fitgym, pedro, "Salto a la comba",            "Cardio de coordinación con cuerda de saltar.",                        GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=salto+comba+jump+rope+tecnica+cardio");
+
+        ejercicioRepository.saveAll(List.of(
+                fg_pressBanca, fg_flexiones, fg_pressInclin, fg_aperturas,
+                fg_dominadas, fg_remoBarra, fg_jalón, fg_pesoMuerto, fg_remoMancuerna,
+                fg_sentadilla, fg_prensa, fg_zancadas, fg_curlFemoral, fg_sentGoblet,
+                fg_pressMilitar, fg_elevLateral, fg_pajaro,
+                fg_curlBarra, fg_curlMartillo,
+                fg_fondos, fg_pressFrances, fg_extTriPolea,
+                fg_plancha, fg_crunch, fg_rueda,
+                fg_hipThrust, fg_patadaGluteo,
+                fg_cinta, fg_burpees, fg_comba
+        ));
+
+        // ─── EJERCICIOS — POWERZONE ───────────────────────────────────────────
+        Ejercicio pz_pressBanca    = ej(powerzone, sofia, "Press de banca",              "Empuje horizontal con barra, técnica de competición.",                GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+banca+tecnica+correcta");
+        Ejercicio pz_flexiones     = ej(powerzone, sofia, "Flexiones con lastre",        "Flexiones estándar con chaleco lastrado.",                            GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=flexiones+con+lastre+weighted+push+up");
+        Ejercicio pz_apertPolea    = ej(powerzone, sofia, "Aperturas en polea",          "Cruce de poleas para trabajar el pecho en estiramiento.",             GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=aperturas+polea+cable+crossover+pecho");
+        Ejercicio pz_pressIncManc  = ej(powerzone, sofia, "Press inclinado mancuernas",  "Pecho superior con mayor rango de movimiento que la barra.",          GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+inclinado+mancuernas+pecho+superior");
+        Ejercicio pz_dominadas     = ej(powerzone, diego, "Dominadas",                   "Tracción vertical con peso corporal.",                                GrupoMuscular.ESPALDA,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=dominadas+pull+up+tecnica+espalda");
+        Ejercicio pz_remoManc      = ej(powerzone, diego, "Remo con mancuerna",          "Remo unilateral para mayor amplitud de movimiento.",                  GrupoMuscular.ESPALDA,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=remo+mancuerna+unilateral+espalda");
+        Ejercicio pz_jalón         = ej(powerzone, diego, "Jalón al pecho",              "Tracción en polea alta, agarre ancho.",                               GrupoMuscular.ESPALDA,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=jalon+al+pecho+polea+alta+espalda");
+        Ejercicio pz_pesoMuerto    = ej(powerzone, diego, "Peso muerto rumano",          "Cadena posterior con rodillas semi-flexionadas.",                     GrupoMuscular.ESPALDA,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=peso+muerto+rumano+romanian+deadlift");
+        Ejercicio pz_remoMaquina   = ej(powerzone, diego, "Remo en máquina",             "Tracción horizontal en máquina de remo.",                             GrupoMuscular.ESPALDA,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=remo+maquina+machine+row+espalda");
+        Ejercicio pz_sentadilla    = ej(powerzone, sofia, "Sentadilla con barra",        "Ejercicio fundamental de tren inferior.",                             GrupoMuscular.PIERNAS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=sentadilla+barra+squat+tecnica+correcta");
+        Ejercicio pz_prensa        = ej(powerzone, sofia, "Prensa de piernas",           "Cuádriceps y glúteos en máquina.",                                    GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=prensa+piernas+leg+press+tecnica");
+        Ejercicio pz_zancadas      = ej(powerzone, sofia, "Zancadas con mancuernas",     "Zancadas caminando con mancuernas para mayor trabajo de glúteos.",    GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=zancadas+mancuernas+walking+lunges");
+        Ejercicio pz_sentGoblet    = ej(powerzone, sofia, "Sentadilla goblet",           "Sentadilla frontal con mancuerna, ideal para principiantes.",         GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=sentadilla+goblet+mancuerna+tecnica");
+        Ejercicio pz_extensionCuad = ej(powerzone, diego, "Extensión de cuádriceps",     "Aislamiento de cuádriceps en máquina.",                               GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=extension+cuadriceps+leg+extension+maquina");
+        Ejercicio pz_pressMilitar  = ej(powerzone, diego, "Press militar con barra",     "Empuje vertical para hombros con barra libre.",                       GrupoMuscular.HOMBROS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+militar+overhead+press+hombros");
+        Ejercicio pz_elevLateral   = ej(powerzone, diego, "Elevaciones laterales",       "Aislamiento del deltoides medial.",                                   GrupoMuscular.HOMBROS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=elevaciones+laterales+deltoides+hombros");
+        Ejercicio pz_facePull      = ej(powerzone, diego, "Face pull",                   "Trabajo de deltoides posterior y manguito en polea alta.",            GrupoMuscular.HOMBROS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=face+pull+deltoides+posterior+manguito");
+        Ejercicio pz_curlManc      = ej(powerzone, sofia, "Curl con mancuernas",         "Curl alterno sentado para mayor concentración.",                      GrupoMuscular.BICEPS,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=curl+mancuernas+biceps+alterno+sentado");
+        Ejercicio pz_curlMartillo  = ej(powerzone, sofia, "Curl martillo",               "Agarre neutro para braquial y braquiorradial.",                       GrupoMuscular.BICEPS,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=curl+martillo+hammer+curl+biceps");
+        Ejercicio pz_fondos        = ej(powerzone, sofia, "Fondos en paralelas",         "Tríceps y pecho inferior con peso corporal.",                         GrupoMuscular.TRICEPS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=fondos+paralelas+triceps+tecnica");
+        Ejercicio pz_extTriPolea   = ej(powerzone, diego, "Extensión de tríceps polea",  "Aislamiento de tríceps con polea alta.",                              GrupoMuscular.TRICEPS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=extension+triceps+polea+alta+aislamiento");
+        Ejercicio pz_pressFrances  = ej(powerzone, diego, "Press francés",               "Tríceps con barra EZ tumbado en banco.",                              GrupoMuscular.TRICEPS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+frances+skull+crusher+triceps");
+        Ejercicio pz_plancha       = ej(powerzone, sofia, "Plancha",                     "Core isométrico con columna neutra.",                                 GrupoMuscular.ABDOMEN,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=plancha+plank+core+isometrico+tecnica");
+        Ejercicio pz_crunch        = ej(powerzone, sofia, "Crunch abdominal",            "Flexión de tronco básica.",                                           GrupoMuscular.ABDOMEN,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=crunch+abdominal+tecnica+correcta");
+        Ejercicio pz_elevPiernas   = ej(powerzone, diego, "Elevación de piernas",        "Core inferior colgado en barra.",                                     GrupoMuscular.ABDOMEN,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=elevacion+piernas+colgado+barra+abdomen");
+        Ejercicio pz_hipThrust     = ej(powerzone, sofia, "Hip thrust",                  "Glúteos con barra en banco.",                                         GrupoMuscular.GLUTEOS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=hip+thrust+gluteos+barra+tecnica");
+        Ejercicio pz_patadaPolea   = ej(powerzone, diego, "Patada de glúteo en polea",   "Extensión de cadera en polea baja.",                                  GrupoMuscular.GLUTEOS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=patada+gluteo+polea+baja+cable");
+        Ejercicio pz_bicicleta     = ej(powerzone, sofia, "Bicicleta estática",          "Cardio de bajo impacto, spinning o rodillo.",                         GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=bicicleta+estatica+spinning+cardio");
+        Ejercicio pz_burpees       = ej(powerzone, diego, "Burpees",                     "Ejercicio de cardio de alta intensidad.",                             GrupoMuscular.CARDIO,   Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=burpees+tecnica+correcta+hiit");
+        Ejercicio pz_hiitCinta     = ej(powerzone, diego, "HIIT en cinta",               "Intervalos de alta intensidad en cinta de correr.",                   GrupoMuscular.CARDIO,   Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=hiit+cinta+intervalos+alta+intensidad");
+        Ejercicio pz_comba         = ej(powerzone, sofia, "Salto a la comba",            "Cardio de coordinación.",                                             GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=salto+comba+jump+rope+tecnica+cardio");
+
+        ejercicioRepository.saveAll(List.of(
+                pz_pressBanca, pz_flexiones, pz_apertPolea, pz_pressIncManc,
+                pz_dominadas, pz_remoManc, pz_jalón, pz_pesoMuerto, pz_remoMaquina,
+                pz_sentadilla, pz_prensa, pz_zancadas, pz_sentGoblet, pz_extensionCuad,
+                pz_pressMilitar, pz_elevLateral, pz_facePull,
+                pz_curlManc, pz_curlMartillo,
+                pz_fondos, pz_extTriPolea, pz_pressFrances,
+                pz_plancha, pz_crunch, pz_elevPiernas,
+                pz_hipThrust, pz_patadaPolea,
+                pz_bicicleta, pz_burpees, pz_hiitCinta, pz_comba
+        ));
+
+        // ─── EJERCICIOS — IRONBODY ────────────────────────────────────────────
+        Ejercicio ib_pressBanca    = ej(ironbody, lucia,  "Press de banca",              "El gran empuje horizontal de powerlifting.",                          GrupoMuscular.PECHO,    Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=press+banca+tecnica+correcta");
+        Ejercicio ib_pressInclin   = ej(ironbody, lucia,  "Press inclinado con barra",   "Pecho superior con barra inclinada a 30°.",                           GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+inclinado+barra+pecho+superior");
+        Ejercicio ib_pressDeclin   = ej(ironbody, lucia,  "Press declinado con barra",   "Pecho inferior en banco declinado.",                                  GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+declinado+barra+pecho+inferior");
+        Ejercicio ib_fondosPecho   = ej(ironbody, marcos, "Fondos pecho",                "Fondos con inclinación hacia delante para mayor activación de pecho.", GrupoMuscular.PECHO,    Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=fondos+pecho+inclinado+paralelas");
+        Ejercicio ib_pesoMuerto    = ej(ironbody, lucia,  "Peso muerto",                 "El rey de los ejercicios de fuerza — cadena posterior completa.",      GrupoMuscular.ESPALDA,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=peso+muerto+deadlift+tecnica+correcta");
+        Ejercicio ib_pesoMuertoSum = ej(ironbody, lucia,  "Peso muerto sumo",            "Variante con piernas abiertas y grip estrecho.",                      GrupoMuscular.ESPALDA,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=peso+muerto+sumo+sumo+deadlift+tecnica");
+        Ejercicio ib_dominadas     = ej(ironbody, lucia,  "Dominadas lastradas",         "Dominadas con cinturón de lastre.",                                   GrupoMuscular.ESPALDA,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=dominadas+lastradas+weighted+pull+up");
+        Ejercicio ib_remoBarra     = ej(ironbody, lucia,  "Remo con barra",              "Tracción horizontal con barra, espalda baja paralela al suelo.",       GrupoMuscular.ESPALDA,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=remo+con+barra+espalda+tecnica");
+        Ejercicio ib_remoPendlay   = ej(ironbody, lucia,  "Remo Pendlay",                "Remo estricto desde el suelo, sin impulso.",                          GrupoMuscular.ESPALDA,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=remo+pendlay+pendlay+row+tecnica");
+        Ejercicio ib_jalón         = ej(ironbody, marcos, "Jalón al pecho",              "Polea alta para espalda, útil para progresar hacia dominadas.",       GrupoMuscular.ESPALDA,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=jalon+al+pecho+polea+alta+espalda");
+        Ejercicio ib_sentadilla    = ej(ironbody, lucia,  "Sentadilla con barra",        "Sentadilla de powerlifting con barra alta o baja.",                   GrupoMuscular.PIERNAS,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=sentadilla+barra+squat+tecnica+correcta");
+        Ejercicio ib_sentFrontal   = ej(ironbody, lucia,  "Sentadilla frontal",          "Barra al frente para mayor activación de cuádriceps.",                GrupoMuscular.PIERNAS,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=sentadilla+frontal+front+squat+tecnica");
+        Ejercicio ib_prensa        = ej(ironbody, marcos, "Prensa de piernas",           "Volumen de piernas en máquina.",                                      GrupoMuscular.PIERNAS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=prensa+piernas+leg+press+tecnica");
+        Ejercicio ib_zancadasBarra = ej(ironbody, marcos, "Zancadas con barra",          "Zancadas con barra en la espalda para mayor carga.",                  GrupoMuscular.PIERNAS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=zancadas+barra+barbell+lunge+piernas");
+        Ejercicio ib_curlFemoral   = ej(ironbody, marcos, "Curl femoral",                "Aislamiento de isquiotibiales en máquina.",                           GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=curl+femoral+leg+curl+isquiotibiales");
+        Ejercicio ib_pressMilitar  = ej(ironbody, lucia,  "Press militar",               "Empuje vertical estricto para hombros.",                              GrupoMuscular.HOMBROS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+militar+overhead+press+hombros");
+        Ejercicio ib_elevLateral   = ej(ironbody, marcos, "Elevaciones laterales",       "Aislamiento de deltoides medial.",                                    GrupoMuscular.HOMBROS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=elevaciones+laterales+deltoides+hombros");
+        Ejercicio ib_facePull      = ej(ironbody, marcos, "Face pull",                   "Hombros posteriores y manguito rotador.",                             GrupoMuscular.HOMBROS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=face+pull+deltoides+posterior+manguito");
+        Ejercicio ib_curlBarra     = ej(ironbody, marcos, "Curl con barra",              "Bíceps con barra recta.",                                             GrupoMuscular.BICEPS,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=curl+biceps+barra+recta+tecnica");
+        Ejercicio ib_curlConcentr  = ej(ironbody, marcos, "Curl concentrado",            "Máximo aislamiento del bíceps apoyando el codo en el muslo.",         GrupoMuscular.BICEPS,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=curl+concentrado+concentration+curl+biceps");
+        Ejercicio ib_fondos        = ej(ironbody, lucia,  "Fondos en paralelas",         "Tríceps con peso corporal + lastre.",                                 GrupoMuscular.TRICEPS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=fondos+paralelas+triceps+tecnica");
+        Ejercicio ib_pressFrancesEZ= ej(ironbody, lucia,  "Press francés barra EZ",      "Tríceps tumbado con barra EZ.",                                       GrupoMuscular.TRICEPS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=press+frances+barra+ez+skull+crusher");
+        Ejercicio ib_plancha       = ej(ironbody, marcos, "Plancha",                     "Core isométrico.",                                                    GrupoMuscular.ABDOMEN,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=plancha+plank+core+isometrico+tecnica");
+        Ejercicio ib_rueda         = ej(ironbody, marcos, "Rueda abdominal",             "Core extensión avanzada.",                                            GrupoMuscular.ABDOMEN,  Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=rueda+abdominal+ab+wheel+rollout+core");
+        Ejercicio ib_crunch        = ej(ironbody, marcos, "Crunch abdominal",            "Flexión de tronco básica.",                                           GrupoMuscular.ABDOMEN,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=crunch+abdominal+tecnica+correcta");
+        Ejercicio ib_hipThrust     = ej(ironbody, lucia,  "Hip thrust con barra",        "Glúteos máxima activación con barra en banco.",                       GrupoMuscular.GLUTEOS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=hip+thrust+gluteos+barra+tecnica");
+        Ejercicio ib_extCadera     = ej(ironbody, marcos, "Extensión de cadera",         "Glúteo en máquina específica o polea.",                               GrupoMuscular.GLUTEOS,  Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=extension+cadera+gluteos+maquina+polea");
+        Ejercicio ib_burpees       = ej(ironbody, marcos, "Burpees",                     "HIIT clásico de alta intensidad.",                                    GrupoMuscular.CARDIO,   Dificultad.AVANZADO,     "https://www.youtube.com/results?search_query=burpees+tecnica+correcta+hiit");
+        Ejercicio ib_comba         = ej(ironbody, marcos, "Salto a la comba",            "Cardio de calentamiento y acondicionamiento.",                        GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=salto+comba+jump+rope+tecnica+cardio");
+        Ejercicio ib_remoMaquina   = ej(ironbody, marcos, "Remo en máquina",             "Cardio + cadena posterior en máquina de remo.",                       GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE, "https://www.youtube.com/results?search_query=remo+maquina+rowing+machine+cardio");
+        Ejercicio ib_kettlebell    = ej(ironbody, marcos, "Kettlebell swing",             "Potencia de cadera con pesa rusa.",                                   GrupoMuscular.GLUTEOS,  Dificultad.INTERMEDIO,   "https://www.youtube.com/results?search_query=kettlebell+swing+pesa+rusa+tecnica");
+
+        ejercicioRepository.saveAll(List.of(
+                ib_pressBanca, ib_pressInclin, ib_pressDeclin, ib_fondosPecho,
+                ib_pesoMuerto, ib_pesoMuertoSum, ib_dominadas, ib_remoBarra, ib_remoPendlay, ib_jalón,
+                ib_sentadilla, ib_sentFrontal, ib_prensa, ib_zancadasBarra, ib_curlFemoral,
+                ib_pressMilitar, ib_elevLateral, ib_facePull,
+                ib_curlBarra, ib_curlConcentr,
+                ib_fondos, ib_pressFrancesEZ,
+                ib_plancha, ib_rueda, ib_crunch,
+                ib_hipThrust, ib_extCadera, ib_kettlebell,
+                ib_burpees, ib_comba, ib_remoMaquina
+        ));
+
         // ─── ENTRENAMIENTOS ───────────────────────────────────────────────────
         Entrenamiento fgYoga      = entrenamiento(fitgym,    ana,    "Yoga Flow Matutino",          "Sesión de yoga para comenzar el día con energía y flexibilidad.",               TipoEntrenamiento.GRUPAL);
         Entrenamiento fgCrossfit  = entrenamiento(fitgym,    pedro,  "CrossFit WOD",                "Workout of the Day de alta intensidad con ejercicios variados.",                TipoEntrenamiento.GRUPAL);
@@ -197,107 +327,85 @@ public class DataSeeder implements CommandLineRunner {
         ));
 
         // ─── EJERCICIOS EN ENTRENAMIENTOS ─────────────────────────────────────
-        List<Ejercicio> predefinidos = ejercicioRepository.findByEsPredefinidoTrue();
-        Ejercicio pressBanca   = ej(predefinidos, "Press de banca");
-        Ejercicio flexiones    = ej(predefinidos, "Flexiones");
-        Ejercicio dominadas    = ej(predefinidos, "Dominadas");
-        Ejercicio remoBarra    = ej(predefinidos, "Remo con barra");
-        Ejercicio sentadilla   = ej(predefinidos, "Sentadilla con barra");
-        Ejercicio pressMilitar = ej(predefinidos, "Press militar");
-        Ejercicio elevLateral  = ej(predefinidos, "Elevaciones laterales");
-        Ejercicio curl         = ej(predefinidos, "Curl con barra");
-        Ejercicio plancha      = ej(predefinidos, "Plancha");
-        Ejercicio hipThrust    = ej(predefinidos, "Hip thrust");
-        Ejercicio burpees      = ej(predefinidos, "Burpees");
-        Ejercicio prensa       = ej(predefinidos, "Prensa de piernas");
-        Ejercicio zancadas     = ej(predefinidos, "Zancadas");
-        Ejercicio pesoMuerto   = ej(predefinidos, "Peso muerto");
-        Ejercicio cinta        = ej(predefinidos, "Carrera en cinta");
-        Ejercicio crunch       = ej(predefinidos, "Crunch abdominal");
-        Ejercicio curlFemoral  = ej(predefinidos, "Curl femoral");
-        Ejercicio saltoComba   = ej(predefinidos, "Salto a la comba");
-        Ejercicio fondos       = ej(predefinidos, "Fondos en paralelas");
-        Ejercicio rueda        = ej(predefinidos, "Rueda abdominal");
-
         entrenamientoEjercicioRepository.saveAll(List.of(
                 // FitGym — Yoga Flow
-                ee(fgYoga, plancha,    1, 3, null, 60,   30, "Posición perfecta de columna"),
-                ee(fgYoga, crunch,     2, 3, 15,   null, 30, "Movimiento lento y controlado"),
-                ee(fgYoga, flexiones,  3, 3, 10,   null, 45, "Caderas alineadas"),
+                ee(fgYoga, fg_plancha,    1, 3, null, 60,   30, "Posición perfecta de columna"),
+                ee(fgYoga, fg_crunch,     2, 3, 15,   null, 30, "Movimiento lento y controlado"),
+                ee(fgYoga, fg_flexiones,  3, 3, 10,   null, 45, "Caderas alineadas"),
 
                 // FitGym — CrossFit WOD
-                ee(fgCrossfit, burpees,    1, 5, 10, null, 60,  "Máxima intensidad"),
-                ee(fgCrossfit, sentadilla, 2, 4, 15, null, 45,  "Profundidad completa"),
-                ee(fgCrossfit, pressBanca, 3, 4, 12, null, 60,  null),
-                ee(fgCrossfit, dominadas,  4, 3, 8,  null, 90,  "Hasta el fallo si es posible"),
-                ee(fgCrossfit, plancha,    5, 3, null,60,  30,  null),
+                ee(fgCrossfit, fg_burpees,    1, 5, 10, null, 60,  "Máxima intensidad"),
+                ee(fgCrossfit, fg_sentadilla, 2, 4, 15, null, 45,  "Profundidad completa"),
+                ee(fgCrossfit, fg_pressBanca, 3, 4, 12, null, 60,  null),
+                ee(fgCrossfit, fg_dominadas,  4, 3, 8,  null, 90,  "Hasta el fallo si es posible"),
+                ee(fgCrossfit, fg_plancha,    5, 3, null,60,  30,  null),
 
                 // FitGym — Personal
-                ee(fgPersonal, pressBanca,   1, 4, 8,  null, 90,  "Peso progresivo cada semana"),
-                ee(fgPersonal, pesoMuerto,   2, 4, 6,  null, 120, "Técnica prioritaria"),
-                ee(fgPersonal, sentadilla,   3, 4, 8,  null, 90,  null),
-                ee(fgPersonal, pressMilitar, 4, 3, 10, null, 60,  null),
-                ee(fgPersonal, dominadas,    5, 3, null,null,60,  "Asistido si es necesario"),
+                ee(fgPersonal, fg_pressBanca,   1, 4, 8,  null, 90,  "Peso progresivo cada semana"),
+                ee(fgPersonal, fg_pesoMuerto,   2, 4, 6,  null, 120, "Técnica prioritaria"),
+                ee(fgPersonal, fg_sentadilla,   3, 4, 8,  null, 90,  null),
+                ee(fgPersonal, fg_pressMilitar, 4, 3, 10, null, 60,  null),
+                ee(fgPersonal, fg_dominadas,    5, 3, null,null,60,  "Asistido si es necesario"),
 
                 // FitGym — Pérdida de peso
-                ee(fgPerdida, cinta,     1, 1, null, 1200, 0,  "20 min calentamiento"),
-                ee(fgPerdida, burpees,   2, 4, 10,  null, 60,  null),
-                ee(fgPerdida, sentadilla,3, 4, 15,  null, 45,  "Peso moderado"),
-                ee(fgPerdida, plancha,   4, 3, null, 45,  30,  null),
-                ee(fgPerdida, zancadas,  5, 3, 12,  null, 45,  "Cada pierna"),
+                ee(fgPerdida, fg_cinta,     1, 1, null, 1200, 0,  "20 min calentamiento"),
+                ee(fgPerdida, fg_burpees,   2, 4, 10,  null, 60,  null),
+                ee(fgPerdida, fg_sentadilla,3, 4, 15,  null, 45,  "Peso moderado"),
+                ee(fgPerdida, fg_plancha,   4, 3, null, 45,  30,  null),
+                ee(fgPerdida, fg_zancadas,  5, 3, 12,  null, 45,  "Cada pierna"),
 
                 // PowerZone — Spinning
-                ee(pzSpinning, cinta,     1, 1, null, 2700, 0,  "45 min spinning en bicicleta estática"),
-                ee(pzSpinning, saltoComba,2, 3, null, 120,  30, "Intervalos de sprint"),
+                ee(pzSpinning, pz_bicicleta, 1, 1, null, 2700, 0,  "45 min spinning en bicicleta estática"),
+                ee(pzSpinning, pz_comba,     2, 3, null, 120,  30, "Intervalos de sprint"),
 
                 // PowerZone — Funcional
-                ee(pzFuncional, sentadilla, 1, 4, 12, null, 60, null),
-                ee(pzFuncional, pressBanca, 2, 4, 12, null, 60, null),
-                ee(pzFuncional, remoBarra,  3, 4, 12, null, 60, null),
-                ee(pzFuncional, plancha,    4, 3, null,45,  30, null),
-                ee(pzFuncional, burpees,    5, 3, 10, null, 60, null),
-                ee(pzFuncional, zancadas,   6, 3, 10, null, 45, "Cada pierna"),
+                ee(pzFuncional, pz_sentadilla, 1, 4, 12, null, 60, null),
+                ee(pzFuncional, pz_pressBanca, 2, 4, 12, null, 60, null),
+                ee(pzFuncional, pz_remoManc,   3, 4, 12, null, 60, null),
+                ee(pzFuncional, pz_plancha,    4, 3, null,45,  30, null),
+                ee(pzFuncional, pz_burpees,    5, 3, 10, null, 60, null),
+                ee(pzFuncional, pz_zancadas,   6, 3, 10, null, 45, "Cada pierna"),
 
                 // PowerZone — Power Personal
-                ee(pzPower, pesoMuerto,   1, 5, 5,  null, 180, "Fuerza máxima — técnica impecable"),
-                ee(pzPower, sentadilla,   2, 5, 5,  null, 180, "Alta intensidad"),
-                ee(pzPower, pressBanca,   3, 5, 5,  null, 120, null),
-                ee(pzPower, pressMilitar, 4, 4, 6,  null, 90,  null),
-                ee(pzPower, dominadas,    5, 3, 8,  null, 90,  null),
+                ee(pzPower, pz_pesoMuerto,   1, 5, 5,  null, 180, "Fuerza máxima — técnica impecable"),
+                ee(pzPower, pz_sentadilla,   2, 5, 5,  null, 180, "Alta intensidad"),
+                ee(pzPower, pz_pressBanca,   3, 5, 5,  null, 120, null),
+                ee(pzPower, pz_pressMilitar, 4, 4, 6,  null, 90,  null),
+                ee(pzPower, pz_dominadas,    5, 3, 8,  null, 90,  null),
 
                 // PowerZone — Definición
-                ee(pzDefinic, pressBanca,  1, 4, 12, null, 60, "Peso moderado-alto"),
-                ee(pzDefinic, elevLateral, 2, 3, 15, null, 45, "Aislamiento deltoides"),
-                ee(pzDefinic, curl,        3, 3, 12, null, 45, null),
-                ee(pzDefinic, fondos,      4, 3, 15, null, 60, null),
-                ee(pzDefinic, crunch,      5, 4, 20, null, 30, null),
-                ee(pzDefinic, hipThrust,   6, 4, 15, null, 60, null),
+                ee(pzDefinic, pz_pressBanca,  1, 4, 12, null, 60, "Peso moderado-alto"),
+                ee(pzDefinic, pz_elevLateral, 2, 3, 15, null, 45, "Aislamiento deltoides"),
+                ee(pzDefinic, pz_curlManc,    3, 3, 12, null, 45, null),
+                ee(pzDefinic, pz_fondos,      4, 3, 15, null, 60, null),
+                ee(pzDefinic, pz_crunch,      5, 4, 20, null, 30, null),
+                ee(pzDefinic, pz_hipThrust,   6, 4, 15, null, 60, null),
 
                 // IronBody — Powerlifting Grupal
-                ee(ibPower, pesoMuerto, 1, 5, 5, null, 180, "Carga máxima del día"),
-                ee(ibPower, sentadilla, 2, 5, 5, null, 180, "Sentadilla competición"),
-                ee(ibPower, pressBanca, 3, 5, 5, null, 180, "Grip de competición"),
+                ee(ibPower, ib_pesoMuerto, 1, 5, 5, null, 180, "Carga máxima del día"),
+                ee(ibPower, ib_sentadilla, 2, 5, 5, null, 180, "Sentadilla competición"),
+                ee(ibPower, ib_pressBanca, 3, 5, 5, null, 180, "Grip de competición"),
 
                 // IronBody — HIIT
-                ee(ibHiit, burpees,    1, 4, 15, null, 30,  "Sin descanso entre series"),
-                ee(ibHiit, saltoComba, 2, 3, null,60,  30,  "Velocidad máxima"),
-                ee(ibHiit, plancha,    3, 3, null,60,  30,  null),
-                ee(ibHiit, sentadilla, 4, 3, 20, null, 45,  "Peso ligero, alta velocidad"),
-                ee(ibHiit, rueda,      5, 3, 10, null, 60,  "Core finisher"),
+                ee(ibHiit, ib_burpees,    1, 4, 15, null, 30,  "Sin descanso entre series"),
+                ee(ibHiit, ib_comba,      2, 3, null,60,  30,  "Velocidad máxima"),
+                ee(ibHiit, ib_plancha,    3, 3, null,60,  30,  null),
+                ee(ibHiit, ib_sentadilla, 4, 3, 20, null, 45,  "Peso ligero, alta velocidad"),
+                ee(ibHiit, ib_rueda,      5, 3, 10, null, 60,  "Core finisher"),
 
                 // IronBody — Competición
-                ee(ibCompet, pesoMuerto, 1, 6, 3, null, 180, "Máximo absoluto"),
-                ee(ibCompet, sentadilla, 2, 6, 3, null, 180, "Profundidad reglamentaria"),
-                ee(ibCompet, pressBanca, 3, 6, 3, null, 180, "Pausa en pecho"),
+                ee(ibCompet, ib_pesoMuerto, 1, 6, 3, null, 180, "Máximo absoluto"),
+                ee(ibCompet, ib_sentadilla, 2, 6, 3, null, 180, "Profundidad reglamentaria"),
+                ee(ibCompet, ib_pressBanca, 3, 6, 3, null, 180, "Pausa en pecho"),
 
                 // IronBody — Volumen
-                ee(ibVolumen, sentadilla,   1, 5, 8,  null, 90,  "Volumen — peso 70%"),
-                ee(ibVolumen, pressBanca,   2, 5, 8,  null, 90,  null),
-                ee(ibVolumen, remoBarra,    3, 5, 8,  null, 90,  null),
-                ee(ibVolumen, pressMilitar, 4, 4, 10, null, 75,  null),
-                ee(ibVolumen, pesoMuerto,   5, 3, 6,  null, 120, "Cierre de sesión"),
-                ee(ibVolumen, curlFemoral,  6, 3, 12, null, 60,  null),
-                ee(ibVolumen, prensa,       7, 3, 15, null, 60,  null)
+                ee(ibVolumen, ib_sentadilla,   1, 5, 8,  null, 90,  "Volumen — peso 70%"),
+                ee(ibVolumen, ib_pressBanca,   2, 5, 8,  null, 90,  null),
+                ee(ibVolumen, ib_remoBarra,    3, 5, 8,  null, 90,  null),
+                ee(ibVolumen, ib_pressMilitar, 4, 4, 10, null, 75,  null),
+                ee(ibVolumen, ib_pesoMuerto,   5, 3, 6,  null, 120, "Cierre de sesión"),
+                ee(ibVolumen, ib_curlFemoral,  6, 3, 12, null, 60,  null),
+                ee(ibVolumen, ib_prensa,       7, 3, 15, null, 60,  null)
         ));
 
         // ─── SESIONES ─────────────────────────────────────────────────────────
@@ -336,41 +444,30 @@ public class DataSeeder implements CommandLineRunner {
 
         // ─── INSCRIPCIONES EN SESIONES ────────────────────────────────────────
         sesionClienteRepository.saveAll(List.of(
-                // FitGym Yoga — próximas
                 inscribir(fgS1, c1), inscribir(fgS1, c2), inscribir(fgS1, c3), inscribir(fgS1, c4),
                 inscribir(fgS2, c1), inscribir(fgS2, c3), inscribir(fgS2, c5),
                 inscribir(fgS3, c2), inscribir(fgS3, c4),
-                // FitGym CrossFit — pasada con asistencia
                 inscribirAsistido(fgS6, c1, true), inscribirAsistido(fgS6, c2, true),
                 inscribirAsistido(fgS6, c3, false), inscribirAsistido(fgS6, c5, true),
-                // FitGym CrossFit — próximas
                 inscribir(fgS4, c1), inscribir(fgS4, c2), inscribir(fgS4, c4),
                 inscribir(fgS5, c3), inscribir(fgS5, c5),
-                // FitGym individual
                 inscribir(fgSI1, c1),
                 inscribir(fgSI2, c2),
 
-                // PowerZone Spinning
                 inscribir(pzS1, c6), inscribir(pzS1, c7), inscribir(pzS1, c8), inscribir(pzS1, c9), inscribir(pzS1, c10),
                 inscribir(pzS2, c6), inscribir(pzS2, c8), inscribir(pzS2, c10),
                 inscribir(pzS3, c7), inscribir(pzS3, c9),
-                // PowerZone Funcional
                 inscribir(pzS4, c6), inscribir(pzS4, c7), inscribir(pzS4, c8),
                 inscribir(pzS5, c9), inscribir(pzS5, c10),
-                // PowerZone individual
                 inscribir(pzSI1, c6),
                 inscribir(pzSI2, c7),
 
-                // IronBody Powerlifting
                 inscribir(ibS1, c11), inscribir(ibS1, c12), inscribir(ibS1, c13),
                 inscribir(ibS2, c11), inscribir(ibS2, c14),
-                // IronBody HIIT — pasada
                 inscribirAsistido(ibS5, c11, true), inscribirAsistido(ibS5, c12, true),
                 inscribirAsistido(ibS5, c13, true), inscribirAsistido(ibS5, c14, false),
-                // IronBody HIIT — próximas
                 inscribir(ibS3, c11), inscribir(ibS3, c12), inscribir(ibS3, c13), inscribir(ibS3, c14), inscribir(ibS3, c15),
                 inscribir(ibS4, c12), inscribir(ibS4, c15),
-                // IronBody individual
                 inscribir(ibSI1, c11),
                 inscribir(ibSI2, c14)
         ));
@@ -461,6 +558,16 @@ public class DataSeeder implements CommandLineRunner {
         e.setDescripcion(desc); e.setTipo(tipo); return e;
     }
 
+    private Ejercicio ej(Gimnasio g, Usuario creadoPor, String nombre, String descripcion,
+                         GrupoMuscular grupo, Dificultad dificultad, String videoUrl) {
+        Ejercicio e = new Ejercicio();
+        e.setNombre(nombre); e.setDescripcion(descripcion);
+        e.setGrupoMuscular(grupo); e.setDificultad(dificultad);
+        e.setGimnasio(g); e.setCreadoPor(creadoPor);
+        e.setVideoUrl(videoUrl);
+        return e;
+    }
+
     private EntrenamientoEjercicio ee(Entrenamiento e, Ejercicio ej, int orden,
                                       Integer series, Integer reps, Integer durSeg,
                                       Integer descSeg, String notas) {
@@ -490,53 +597,5 @@ public class DataSeeder implements CommandLineRunner {
     private EntrenamientoEspecifico especifico(Entrenamiento e, Usuario c, String notas) {
         EntrenamientoEspecifico ee = new EntrenamientoEspecifico();
         ee.setEntrenamiento(e); ee.setCliente(c); ee.setNotas(notas); ee.setCompletado(false); return ee;
-    }
-
-    private Ejercicio ej(List<Ejercicio> lista, String nombre) {
-        return lista.stream().filter(e -> e.getNombre().equals(nombre)).findFirst()
-                .orElseThrow(() -> new RuntimeException("Ejercicio no encontrado: " + nombre));
-    }
-
-    // ─── EJERCICIOS PREDEFINIDOS ──────────────────────────────────────────────
-
-    private List<Ejercicio> ejerciciosPredefinidos() {
-        return List.of(
-                crearEjercicio("Press de banca",               "Ejercicio básico de empuje horizontal con barra.",                                       GrupoMuscular.PECHO,    Dificultad.INTERMEDIO),
-                crearEjercicio("Flexiones",                    "Ejercicio de empuje con peso corporal.",                                                  GrupoMuscular.PECHO,    Dificultad.PRINCIPIANTE),
-                crearEjercicio("Aperturas con mancuernas",     "Ejercicio de aislamiento para el pecho en banco plano.",                                  GrupoMuscular.PECHO,    Dificultad.INTERMEDIO),
-                crearEjercicio("Press inclinado con barra",    "Variante del press de banca en banco inclinado para el pecho superior.",                  GrupoMuscular.PECHO,    Dificultad.INTERMEDIO),
-                crearEjercicio("Dominadas",                    "Ejercicio de tracción vertical con peso corporal.",                                       GrupoMuscular.ESPALDA,  Dificultad.INTERMEDIO),
-                crearEjercicio("Remo con barra",               "Ejercicio de tracción horizontal con carga libre.",                                       GrupoMuscular.ESPALDA,  Dificultad.INTERMEDIO),
-                crearEjercicio("Jalón al pecho",               "Tracción vertical en polea alta.",                                                        GrupoMuscular.ESPALDA,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Peso muerto",                  "Ejercicio multiarticular que trabaja principalmente la cadena posterior.",                 GrupoMuscular.ESPALDA,  Dificultad.AVANZADO),
-                crearEjercicio("Sentadilla con barra",         "Ejercicio multiarticular fundamental para el tren inferior.",                             GrupoMuscular.PIERNAS,  Dificultad.INTERMEDIO),
-                crearEjercicio("Prensa de piernas",            "Ejercicio de empuje de piernas en máquina.",                                              GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Zancadas",                     "Ejercicio unilateral para cuádriceps y glúteos.",                                         GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Curl femoral",                 "Ejercicio de aislamiento para los isquiotibiales.",                                       GrupoMuscular.PIERNAS,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Press militar",                "Ejercicio de empuje vertical para hombros con barra.",                                    GrupoMuscular.HOMBROS,  Dificultad.INTERMEDIO),
-                crearEjercicio("Elevaciones laterales",        "Ejercicio de aislamiento para el deltoides lateral.",                                     GrupoMuscular.HOMBROS,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Pájaro",                       "Ejercicio de aislamiento para el deltoides posterior.",                                   GrupoMuscular.HOMBROS,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Curl con barra",               "Ejercicio básico de flexión de codo para bíceps.",                                        GrupoMuscular.BICEPS,   Dificultad.PRINCIPIANTE),
-                crearEjercicio("Curl martillo",                "Variante del curl que trabaja el braquial y braquiorradial.",                             GrupoMuscular.BICEPS,   Dificultad.PRINCIPIANTE),
-                crearEjercicio("Fondos en paralelas",          "Ejercicio de empuje con peso corporal para tríceps.",                                     GrupoMuscular.TRICEPS,  Dificultad.INTERMEDIO),
-                crearEjercicio("Press francés",                "Ejercicio de aislamiento para tríceps con barra EZ.",                                     GrupoMuscular.TRICEPS,  Dificultad.INTERMEDIO),
-                crearEjercicio("Extensión de tríceps en polea","Ejercicio de aislamiento en polea alta.",                                                 GrupoMuscular.TRICEPS,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Plancha",                      "Ejercicio isométrico de core.",                                                           GrupoMuscular.ABDOMEN,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Crunch abdominal",             "Ejercicio básico de flexión de tronco.",                                                  GrupoMuscular.ABDOMEN,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Rueda abdominal",              "Ejercicio avanzado de extensión de core.",                                                GrupoMuscular.ABDOMEN,  Dificultad.AVANZADO),
-                crearEjercicio("Hip thrust",                   "Ejercicio de empuje de cadera para glúteos con barra.",                                   GrupoMuscular.GLUTEOS,  Dificultad.INTERMEDIO),
-                crearEjercicio("Patada de glúteo en polea",    "Ejercicio de aislamiento de glúteo en polea baja.",                                       GrupoMuscular.GLUTEOS,  Dificultad.PRINCIPIANTE),
-                crearEjercicio("Carrera en cinta",             "Cardio aeróbico en cinta de correr.",                                                     GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE),
-                crearEjercicio("Burpees",                      "Ejercicio de cardio de alta intensidad con peso corporal.",                               GrupoMuscular.CARDIO,   Dificultad.AVANZADO),
-                crearEjercicio("Salto a la comba",             "Cardio de bajo impacto con cuerda de saltar.",                                            GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE),
-                crearEjercicio("Remo en máquina",              "Cardio de bajo impacto que trabaja todo el cuerpo.",                                      GrupoMuscular.CARDIO,   Dificultad.PRINCIPIANTE)
-        );
-    }
-
-    private Ejercicio crearEjercicio(String nombre, String descripcion, GrupoMuscular grupo, Dificultad dificultad) {
-        Ejercicio e = new Ejercicio();
-        e.setNombre(nombre); e.setDescripcion(descripcion);
-        e.setGrupoMuscular(grupo); e.setDificultad(dificultad);
-        e.setEsPredefinido(true); return e;
     }
 }

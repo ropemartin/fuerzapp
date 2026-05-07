@@ -11,10 +11,6 @@ export class EjercicioService {
 
   constructor(private http: HttpClient) {}
 
-  listarPredefinidos(): Observable<Ejercicio[]> {
-    return this.http.get<Ejercicio[]>(`${this.base}/ejercicios`);
-  }
-
   listarPorGimnasio(gimnasioId: number, grupoMuscular?: GrupoMuscular): Observable<Ejercicio[]> {
     let params = new HttpParams();
     if (grupoMuscular) params = params.set('grupoMuscular', grupoMuscular);

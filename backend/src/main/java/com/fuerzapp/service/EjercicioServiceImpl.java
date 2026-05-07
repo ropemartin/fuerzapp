@@ -24,21 +24,11 @@ public class EjercicioServiceImpl implements EjercicioService {
     private final GimnasioRepository gimnasioRepository;
     private final UsuarioRepository usuarioRepository;
 
-    // ─── Consultas ────────────────────────────────────────────────────────────
-
-    @Override
-    public List<EjercicioResponse> listarPredefinidos() {
-        return ejercicioRepository.findByEsPredefinidoTrue().stream()
-                .map(this::toResponse)
-                .toList();
-    }
-
     @Override
     public List<EjercicioResponse> listarDisponiblesPorGimnasio(Long gimnasioId, GrupoMuscular grupoMuscular) {
         List<Ejercicio> ejercicios = (grupoMuscular != null)
-                ? ejercicioRepository.findDisponiblesByGimnasioIdAndGrupoMuscular(gimnasioId, grupoMuscular)
-                : ejercicioRepository.findDisponiblesByGimnasioId(gimnasioId);
-
+                ? ejercicioRepository.findByGimnasioIdAndGrupoMuscular(gimnasioId, grupoMuscular)
+                : ejercicioRepository.findByGimnasioId(gimnasioId);
         return ejercicios.stream().map(this::toResponse).toList();
     }
 
@@ -46,8 +36,6 @@ public class EjercicioServiceImpl implements EjercicioService {
     public EjercicioResponse obtenerPorId(Long id) {
         return toResponse(findById(id));
     }
-
-    // ─── Alta de ejercicio por entrenador ─────────────────────────────────────
 
     @Override
     @Transactional
@@ -66,14 +54,11 @@ public class EjercicioServiceImpl implements EjercicioService {
         ejercicio.setDificultad(request.getDificultad());
         ejercicio.setVideoUrl(request.getVideoUrl());
         ejercicio.setImagenUrl(request.getImagenUrl());
-        ejercicio.setEsPredefinido(false);
         ejercicio.setGimnasio(gimnasio);
         ejercicio.setCreadoPor(entrenador);
 
         return toResponse(ejercicioRepository.save(ejercicio));
     }
-
-    // ─── Edición y borrado ────────────────────────────────────────────────────
 
     @Override
     @Transactional
@@ -93,14 +78,8 @@ public class EjercicioServiceImpl implements EjercicioService {
     @Override
     @Transactional
     public void eliminar(Long id) {
-        Ejercicio ejercicio = findById(id);
-        if (ejercicio.getEsPredefinido()) {
-            throw new RuntimeException("No se pueden eliminar ejercicios de la biblioteca global");
-        }
-        ejercicioRepository.delete(ejercicio);
+        ejercicioRepository.delete(findById(id));
     }
-
-    // ─── Helpers ─────────────────────────────────────────────────────────────
 
     private Ejercicio findById(Long id) {
         return ejercicioRepository.findById(id)
@@ -116,11 +95,10 @@ public class EjercicioServiceImpl implements EjercicioService {
         r.setDificultad(e.getDificultad());
         r.setVideoUrl(e.getVideoUrl());
         r.setImagenUrl(e.getImagenUrl());
-        r.setEsPredefinido(e.getEsPredefinido());
         r.setGimnasioId(e.getGimnasio() != null ? e.getGimnasio().getId() : null);
         r.setCreadoPorNombre(e.getCreadoPor() != null
                 ? e.getCreadoPor().getNombre() + " " + e.getCreadoPor().getApellidos()
-                : "Fuerzapp");
+                : null);
         return r;
     }
 }

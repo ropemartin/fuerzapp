@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface EjercicioService {
 
-    List<EjercicioResponse> listarPredefinidos();
     List<EjercicioResponse> listarDisponiblesPorGimnasio(Long gimnasioId, GrupoMuscular grupoMuscular);
     EjercicioResponse obtenerPorId(Long id);
     EjercicioResponse crearEjercicioEnGimnasio(Long gimnasioId, EjercicioRequest request);

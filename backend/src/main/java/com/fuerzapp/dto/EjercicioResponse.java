@@ -14,8 +14,6 @@ public class EjercicioResponse {
     private Dificultad dificultad;
     private String videoUrl;
     private String imagenUrl;
-    private boolean esPredefinido;
-    // null si es predefinido
     private Long gimnasioId;
     private String creadoPorNombre;
 }

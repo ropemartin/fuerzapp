@@ -13,7 +13,6 @@ export interface Ejercicio {
   dificultad: Dificultad;
   videoUrl?: string;
   imagenUrl?: string;
-  esPredefinido: boolean;
   gimnasioId?: number;
   creadoPorNombre: string;
 }

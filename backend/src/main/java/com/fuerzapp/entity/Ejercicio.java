@@ -36,15 +36,10 @@ public class Ejercicio {
     @Column(name = "imagen_url")
     private String imagenUrl;
 
-    @Column(name = "es_predefinido", nullable = false)
-    private Boolean esPredefinido = false;
-
-    // NULL si el ejercicio es de la biblioteca global (predefinido)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gimnasio_id")
     private Gimnasio gimnasio;
 
-    // NULL si el ejercicio es predefinido
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creado_por_id")
     private Usuario creadoPor;
