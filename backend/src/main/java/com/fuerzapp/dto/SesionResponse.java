@@ -19,5 +19,6 @@ public class SesionResponse {
     private String ubicacion;
     private Integer capacidadMaxima;
     private Long plazasOcupadas;
+    private List<EntrenamientoEjercicioResponse> ejercicios;
     private List<UsuarioResponse> clientesInscritos;
 }

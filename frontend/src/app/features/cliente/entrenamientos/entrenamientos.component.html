@@ -5,7 +5,7 @@
   } @else {
     <mat-tab-group animationDuration="150ms">
 
-      <!-- TAB: Sesiones individuales -->
+      <!-- ══ TAB: Sesiones individuales ══════════════════════════════════════ -->
       <mat-tab label="Sesiones individuales ({{ miasSesiones.length }})">
         <div class="tab-body">
           @if (!miasSesiones.length) {
@@ -15,29 +15,74 @@
             </div>
           } @else {
             @for (s of miasSesiones; track s.id) {
-              <mat-card class="sesion-card" [class.pasada]="!esProxima(s.fechaHora)">
-                <mat-card-content>
-                  <div class="sesion-row">
-                    <mat-icon class="sesion-icon">person</mat-icon>
-                    <div class="sesion-info">
-                      <strong>{{ s.entrenamientoNombre }}</strong>
-                      <p>{{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }} · {{ s.duracionMinutos || '—' }} min</p>
-                      <small>{{ s.ubicacion || 'Sin ubicación' }} · Entrenador: {{ s.entrenadorNombre }}</small>
-                    </div>
-                    @if (!esProxima(s.fechaHora)) {
-                      <span class="chip chip-pasada">Pasada</span>
-                    } @else {
-                      <span class="chip chip-proxima">Próxima</span>
-                    }
+              <mat-expansion-panel class="sesion-panel" [class.pasada]="!esProxima(s.fechaHora)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon class="tipo-icon">person</mat-icon>
+                    {{ s.entrenamientoNombre }}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    {{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }} · {{ s.duracionMinutos || '—' }} min
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="sesion-detalle">
+                  <div class="sesion-meta-row">
+                    <span class="meta-item"><mat-icon>person</mat-icon> {{ s.entrenadorNombre }}</span>
+                    <span class="meta-item"><mat-icon>location_on</mat-icon> {{ s.ubicacion || 'Sin ubicación' }}</span>
+                    <span class="chip" [class.chip-proxima]="esProxima(s.fechaHora)" [class.chip-pasada]="!esProxima(s.fechaHora)">
+                      {{ esProxima(s.fechaHora) ? 'Próxima' : 'Pasada' }}
+                    </span>
                   </div>
-                </mat-card-content>
-              </mat-card>
+
+                  @if (s.ejercicios?.length) {
+                    <p class="sec-title">Ejercicios</p>
+                    <div class="ejercicios-lista">
+                      @for (ee of s.ejercicios; track ee.id) {
+                        <div class="ejercicio-item">
+                          <span class="orden-badge">{{ ee.orden }}</span>
+                          <div class="ej-body">
+                            <div class="ej-title-row">
+                              <strong class="ej-nombre">{{ ee.ejercicioNombre }}</strong>
+                              <div class="ej-chips">
+                                <span class="chip-grupo">{{ ee.grupoMuscular | titlecase }}</span>
+                                <span class="chip-dif chip-{{ ee.dificultad?.toLowerCase() }}">{{ ee.dificultad | titlecase }}</span>
+                              </div>
+                            </div>
+                            @if (ee.series || ee.repeticiones || ee.duracionSegundos || ee.descansoSegundos) {
+                              <div class="ej-prescripcion">
+                                @if (ee.series) { <span class="meta-badge">{{ ee.series }} series</span> }
+                                @if (ee.repeticiones) { <span class="meta-badge">{{ ee.repeticiones }} reps</span> }
+                                @if (ee.duracionSegundos) { <span class="meta-badge">{{ ee.duracionSegundos }} s</span> }
+                                @if (ee.descansoSegundos) { <span class="meta-badge meta-descanso">{{ ee.descansoSegundos }} s descanso</span> }
+                              </div>
+                            }
+                            @if (ee.ejercicioDescripcion) {
+                              <p class="ej-descripcion">{{ ee.ejercicioDescripcion }}</p>
+                            }
+                            @if (ee.notas) {
+                              <p class="ej-notas">{{ ee.notas }}</p>
+                            }
+                            @if (ee.videoUrl) {
+                              <a [href]="ee.videoUrl" target="_blank" rel="noopener" class="video-link">
+                                <mat-icon>play_circle</mat-icon> Ver cómo se hace
+                              </a>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <p class="sin-ejercicios">Este entrenamiento aún no tiene ejercicios asignados.</p>
+                  }
+                </div>
+              </mat-expansion-panel>
             }
           }
         </div>
       </mat-tab>
 
-      <!-- TAB: Sesiones grupales -->
+      <!-- ══ TAB: Sesiones grupales ══════════════════════════════════════════ -->
       <mat-tab label="Sesiones grupales ({{ sesionesGrupales.length }})">
         <div class="tab-body">
           @if (!sesionesGrupales.length) {
@@ -47,32 +92,77 @@
             </div>
           } @else {
             @for (s of sesionesGrupales; track s.id) {
-              <mat-card class="sesion-card" [class.pasada]="!esProxima(s.fechaHora)">
-                <mat-card-content>
-                  <div class="sesion-row">
-                    <mat-icon class="sesion-icon">groups</mat-icon>
-                    <div class="sesion-info">
-                      <strong>{{ s.entrenamientoNombre }}</strong>
-                      <p>{{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }} · {{ s.duracionMinutos || '—' }} min</p>
-                      <small>
-                        {{ s.ubicacion || 'Sin ubicación' }} · Entrenador: {{ s.entrenadorNombre }}
-                        @if (s.capacidadMaxima) { · {{ s.plazasOcupadas }}/{{ s.capacidadMaxima }} plazas }
-                      </small>
-                    </div>
-                    @if (!esProxima(s.fechaHora)) {
-                      <span class="chip chip-pasada">Pasada</span>
-                    } @else {
-                      <span class="chip chip-proxima">Próxima</span>
+              <mat-expansion-panel class="sesion-panel" [class.pasada]="!esProxima(s.fechaHora)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon class="tipo-icon">groups</mat-icon>
+                    {{ s.entrenamientoNombre }}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    {{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }} · {{ s.duracionMinutos || '—' }} min
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="sesion-detalle">
+                  <div class="sesion-meta-row">
+                    <span class="meta-item"><mat-icon>person</mat-icon> {{ s.entrenadorNombre }}</span>
+                    <span class="meta-item"><mat-icon>location_on</mat-icon> {{ s.ubicacion || 'Sin ubicación' }}</span>
+                    @if (s.capacidadMaxima) {
+                      <span class="meta-item"><mat-icon>group</mat-icon> {{ s.plazasOcupadas }}/{{ s.capacidadMaxima }} plazas</span>
                     }
+                    <span class="chip" [class.chip-proxima]="esProxima(s.fechaHora)" [class.chip-pasada]="!esProxima(s.fechaHora)">
+                      {{ esProxima(s.fechaHora) ? 'Próxima' : 'Pasada' }}
+                    </span>
                   </div>
-                </mat-card-content>
-              </mat-card>
+
+                  @if (s.ejercicios?.length) {
+                    <p class="sec-title">Ejercicios</p>
+                    <div class="ejercicios-lista">
+                      @for (ee of s.ejercicios; track ee.id) {
+                        <div class="ejercicio-item">
+                          <span class="orden-badge">{{ ee.orden }}</span>
+                          <div class="ej-body">
+                            <div class="ej-title-row">
+                              <strong class="ej-nombre">{{ ee.ejercicioNombre }}</strong>
+                              <div class="ej-chips">
+                                <span class="chip-grupo">{{ ee.grupoMuscular | titlecase }}</span>
+                                <span class="chip-dif chip-{{ ee.dificultad?.toLowerCase() }}">{{ ee.dificultad | titlecase }}</span>
+                              </div>
+                            </div>
+                            @if (ee.series || ee.repeticiones || ee.duracionSegundos || ee.descansoSegundos) {
+                              <div class="ej-prescripcion">
+                                @if (ee.series) { <span class="meta-badge">{{ ee.series }} series</span> }
+                                @if (ee.repeticiones) { <span class="meta-badge">{{ ee.repeticiones }} reps</span> }
+                                @if (ee.duracionSegundos) { <span class="meta-badge">{{ ee.duracionSegundos }} s</span> }
+                                @if (ee.descansoSegundos) { <span class="meta-badge meta-descanso">{{ ee.descansoSegundos }} s descanso</span> }
+                              </div>
+                            }
+                            @if (ee.ejercicioDescripcion) {
+                              <p class="ej-descripcion">{{ ee.ejercicioDescripcion }}</p>
+                            }
+                            @if (ee.notas) {
+                              <p class="ej-notas">{{ ee.notas }}</p>
+                            }
+                            @if (ee.videoUrl) {
+                              <a [href]="ee.videoUrl" target="_blank" rel="noopener" class="video-link">
+                                <mat-icon>play_circle</mat-icon> Ver cómo se hace
+                              </a>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <p class="sin-ejercicios">Este entrenamiento aún no tiene ejercicios asignados.</p>
+                  }
+                </div>
+              </mat-expansion-panel>
             }
           }
         </div>
       </mat-tab>
 
-      <!-- TAB: Planes específicos -->
+      <!-- ══ TAB: Planes específicos ═════════════════════════════════════════ -->
       <mat-tab label="Planes asignados ({{ planesEspecificos.length }})">
         <div class="tab-body">
           @if (!planesEspecificos.length) {
@@ -85,7 +175,7 @@
               <mat-expansion-panel class="plan-panel" [class.completado]="p.completado">
                 <mat-expansion-panel-header>
                   <mat-panel-title>
-                    <mat-icon class="plan-icon">{{ p.completado ? 'check_circle' : 'fitness_center' }}</mat-icon>
+                    <mat-icon class="plan-icon">{{ p.completado ? 'check_circle' : 'assignment' }}</mat-icon>
                     {{ p.entrenamientoNombre }}
                   </mat-panel-title>
                   <mat-panel-description>
@@ -97,21 +187,39 @@
                   <p class="plan-notas">{{ p.notas }}</p>
                 }
 
-                <!-- Ejercicios del plan -->
                 @if (p.ejercicios?.length) {
+                  <p class="sec-title">Ejercicios</p>
                   <div class="ejercicios-lista">
                     @for (ee of p.ejercicios; track ee.id) {
-                      <div class="ejercicio-mini">
+                      <div class="ejercicio-item">
                         <span class="orden-badge">{{ ee.orden }}</span>
-                        <div>
-                          <strong>{{ ee.ejercicioNombre }}</strong>
-                          <small>
-                            @if (ee.series) { {{ ee.series }} series · }
-                            @if (ee.repeticiones) { {{ ee.repeticiones }} reps · }
-                            @if (ee.duracionSegundos) { {{ ee.duracionSegundos }}s · }
-                            @if (ee.descansoSegundos) { {{ ee.descansoSegundos }}s descanso }
-                          </small>
-                          @if (ee.notas) { <p class="nota-ej">{{ ee.notas }}</p> }
+                        <div class="ej-body">
+                          <div class="ej-title-row">
+                            <strong class="ej-nombre">{{ ee.ejercicioNombre }}</strong>
+                            <div class="ej-chips">
+                              <span class="chip-grupo">{{ ee.grupoMuscular | titlecase }}</span>
+                              <span class="chip-dif chip-{{ ee.dificultad?.toLowerCase() }}">{{ ee.dificultad | titlecase }}</span>
+                            </div>
+                          </div>
+                          @if (ee.series || ee.repeticiones || ee.duracionSegundos || ee.descansoSegundos) {
+                            <div class="ej-prescripcion">
+                              @if (ee.series) { <span class="meta-badge">{{ ee.series }} series</span> }
+                              @if (ee.repeticiones) { <span class="meta-badge">{{ ee.repeticiones }} reps</span> }
+                              @if (ee.duracionSegundos) { <span class="meta-badge">{{ ee.duracionSegundos }} s</span> }
+                              @if (ee.descansoSegundos) { <span class="meta-badge meta-descanso">{{ ee.descansoSegundos }} s descanso</span> }
+                            </div>
+                          }
+                          @if (ee.ejercicioDescripcion) {
+                            <p class="ej-descripcion">{{ ee.ejercicioDescripcion }}</p>
+                          }
+                          @if (ee.notas) {
+                            <p class="ej-notas">{{ ee.notas }}</p>
+                          }
+                          @if (ee.videoUrl) {
+                            <a [href]="ee.videoUrl" target="_blank" rel="noopener" class="video-link">
+                              <mat-icon>play_circle</mat-icon> Ver cómo se hace
+                            </a>
+                          }
                         </div>
                       </div>
                     }

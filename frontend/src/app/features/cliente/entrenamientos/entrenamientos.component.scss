@@ -2,47 +2,36 @@
   padding: 20px 0 0;
 }
 
-// ── Tarjetas de sesión ────────────────────────────────────────────────────────
+// ── Paneles de sesión ─────────────────────────────────────────────────────────
 
-.sesion-card {
-  margin-bottom: 12px;
+.sesion-panel {
+  margin-bottom: 10px;
   border-left: 4px solid #1976d2;
-  transition: box-shadow 0.2s;
+  border-radius: 4px !important;
 
-  &:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  &.pasada { border-left-color: #bbb; opacity: 0.85; }
 
-  &.pasada { border-left-color: #bbb; opacity: 0.8; }
-
-  mat-card-content { padding: 12px 16px !important; }
+  .tipo-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    color: #1976d2;
+    vertical-align: middle;
+  }
 }
 
-.sesion-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sesion-icon {
-  color: #1976d2;
-  flex-shrink: 0;
-}
-
-.sesion-info {
-  flex: 1;
-
-  strong { display: block; font-size: 0.95rem; }
-  p      { margin: 4px 0 2px; font-size: 0.85rem; color: #444; }
-  small  { color: #777; font-size: 0.78rem; }
-}
-
-// ── Planes específicos ────────────────────────────────────────────────────────
+// ── Paneles de plan específico ────────────────────────────────────────────────
 
 .plan-panel {
   margin-bottom: 10px;
+  border-left: 4px solid #7b1fa2;
+  border-radius: 4px !important;
 
   &.completado {
-    background: #f9f9f9;
-    mat-expansion-panel-header { color: #888; }
+    border-left-color: #43a047;
+    background: #f9fbe7;
+    mat-expansion-panel-header { color: #555; }
   }
 }
 
@@ -50,58 +39,209 @@
   margin-right: 8px;
   vertical-align: middle;
   color: #7b1fa2;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
+
+// ── Contenido expandido de sesión ─────────────────────────────────────────────
+
+.sesion-detalle {
+  padding: 4px 0 8px;
+}
+
+.sesion-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #555;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #888;
+  }
+}
+
+// ── Notas del plan ────────────────────────────────────────────────────────────
 
 .plan-notas {
   font-size: 0.88rem;
   color: #555;
   font-style: italic;
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   padding: 8px 12px;
   background: #fafafa;
   border-left: 3px solid #ddd;
   border-radius: 2px;
 }
 
-// Ejercicios dentro de un plan
+// ── Sección de ejercicios ─────────────────────────────────────────────────────
+
+.sec-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #888;
+  margin: 0 0 10px;
+}
 
 .ejercicios-lista {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 8px;
 }
 
-.ejercicio-mini {
+// ── Tarjeta de ejercicio ──────────────────────────────────────────────────────
+
+.ejercicio-item {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 12px 14px;
   background: #fafafa;
+  border: 1px solid #eee;
   border-radius: 8px;
-
-  strong { display: block; font-size: 0.9rem; }
-  small  { color: #666; font-size: 0.78rem; }
-
-  .nota-ej { margin: 4px 0 0; font-size: 0.78rem; color: #888; font-style: italic; }
 }
 
 .orden-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
   border-radius: 50%;
-  background: #7b1fa2;
+  background: #1976d2;
   color: white;
   font-size: 0.75rem;
   font-weight: 700;
-  flex-shrink: 0;
   margin-top: 2px;
 }
 
-// ── Chips ─────────────────────────────────────────────────────────────────────
+.plan-panel .orden-badge {
+  background: #7b1fa2;
+}
+
+.ej-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ej-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ej-nombre {
+  font-size: 0.95rem;
+}
+
+.ej-chips {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+// ── Prescripción (series / reps) ──────────────────────────────────────────────
+
+.ej-prescripcion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.meta-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #e3f2fd;
+  color: #1565c0;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.meta-descanso {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+// ── Descripción y notas ───────────────────────────────────────────────────────
+
+.ej-descripcion {
+  margin: 0 0 6px;
+  font-size: 0.83rem;
+  color: #555;
+  line-height: 1.45;
+}
+
+.ej-notas {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  color: #888;
+  font-style: italic;
+}
+
+// ── Enlace de vídeo ───────────────────────────────────────────────────────────
+
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #e53935;
+  text-decoration: none;
+  transition: color 0.15s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover { color: #b71c1c; text-decoration: underline; }
+}
+
+// ── Chips de grupo muscular / dificultad ──────────────────────────────────────
+
+.chip-grupo, .chip-dif {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.chip-grupo {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.chip-dif {
+  &.chip-principiante { background: #e8f5e9; color: #2e7d32; }
+  &.chip-intermedio   { background: #fff8e1; color: #f57f17; }
+  &.chip-avanzado     { background: #ffebee; color: #c62828; }
+}
+
+// ── Chips de estado ───────────────────────────────────────────────────────────
 
 .chip {
   display: inline-block;
@@ -115,7 +255,14 @@
   &.chip-pasada  { background: #f5f5f5; color: #888; }
 }
 
-// ── Estado vacío ─────────────────────────────────────────────────────────────
+// ── Estado vacío / utilidades ─────────────────────────────────────────────────
+
+.sin-ejercicios {
+  font-size: 0.85rem;
+  color: #aaa;
+  font-style: italic;
+  margin: 4px 0 8px;
+}
 
 .estado-vacio {
   display: flex;

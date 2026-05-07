@@ -5,9 +5,11 @@ export interface EntrenamientoEjercicio {
   orden: number;
   ejercicioId: number;
   ejercicioNombre: string;
+  ejercicioDescripcion?: string;
   grupoMuscular: string;
   dificultad: string;
   imagenUrl?: string;
+  videoUrl?: string;
   series?: number;
   repeticiones?: number;
   duracionSegundos?: number;
@@ -55,6 +57,7 @@ export interface Sesion {
   ubicacion?: string;
   capacidadMaxima?: number;
   plazasOcupadas: number;
+  ejercicios: EntrenamientoEjercicio[];
   clientesInscritos: any[];
 }
 

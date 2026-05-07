@@ -9,9 +9,11 @@ public class EntrenamientoEjercicioResponse {
     private Integer orden;
     private Long ejercicioId;
     private String ejercicioNombre;
+    private String ejercicioDescripcion;
     private String grupoMuscular;
     private String dificultad;
     private String imagenUrl;
+    private String videoUrl;
     private Integer series;
     private Integer repeticiones;
     private Integer duracionSegundos;

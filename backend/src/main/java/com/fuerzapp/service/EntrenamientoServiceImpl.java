@@ -353,9 +353,11 @@ public class EntrenamientoServiceImpl implements EntrenamientoService {
         r.setOrden(ee.getOrden());
         r.setEjercicioId(ee.getEjercicio().getId());
         r.setEjercicioNombre(ee.getEjercicio().getNombre());
+        r.setEjercicioDescripcion(ee.getEjercicio().getDescripcion());
         r.setGrupoMuscular(ee.getEjercicio().getGrupoMuscular().name());
         r.setDificultad(ee.getEjercicio().getDificultad().name());
         r.setImagenUrl(ee.getEjercicio().getImagenUrl());
+        r.setVideoUrl(ee.getEjercicio().getVideoUrl());
         r.setSeries(ee.getSeries());
         r.setRepeticiones(ee.getRepeticiones());
         r.setDuracionSegundos(ee.getDuracionSegundos());
@@ -379,6 +381,12 @@ public class EntrenamientoServiceImpl implements EntrenamientoService {
         r.setUbicacion(s.getUbicacion());
         r.setCapacidadMaxima(s.getCapacidadMaxima());
         r.setPlazasOcupadas(sesionClienteRepository.countBySesionId(s.getId()));
+        r.setEjercicios(
+                entrenamientoEjercicioRepository
+                        .findByEntrenamientoIdOrderByOrden(s.getEntrenamiento().getId()).stream()
+                        .map(this::toEjercicioResponse)
+                        .toList()
+        );
         r.setClientesInscritos(
                 sesionClienteRepository.findBySesionId(s.getId()).stream()
                         .map(sc -> {
