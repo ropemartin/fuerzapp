@@ -1,0 +1,102 @@
+.selector-card {
+  margin-bottom: 24px;
+  mat-card-content { padding: 16px !important; }
+  mat-form-field { width: 300px; }
+}
+
+.sin-gimnasio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  color: #888;
+  gap: 12px;
+  mat-icon { font-size: 64px; width: 64px; height: 64px; opacity: 0.2; }
+  h3 { margin: 0; font-size: 1.2rem; }
+  p { margin: 0; }
+}
+
+.gym-header {
+  margin-bottom: 24px;
+  h2 { margin: 0 0 6px; font-size: 1.6rem; font-weight: 600; }
+  .gym-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+    mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px !important;
+    gap: 6px;
+  }
+
+  .stat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    &.azul { color: #1976d2; }
+    &.verde { color: #4caf50; }
+    &.morado { color: #7b1fa2; }
+  }
+
+  .stat-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: #666;
+  }
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444;
+  margin: 0 0 12px;
+}
+
+.accesos-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.cargando {
+  color: #888;
+  text-align: center;
+  padding: 40px;
+}

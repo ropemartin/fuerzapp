@@ -1,0 +1,151 @@
+<app-layout titulo="Mi suscripción" [navItems]="navItems">
+
+  <!-- Banner de pago exitoso -->
+  @if (pagoExitoso) {
+    <div class="banner-exito">
+      <mat-icon>check_circle</mat-icon>
+      <span>¡Pago completado! Tu suscripción ha sido renovada.</span>
+    </div>
+  }
+
+  @if (cargando) {
+    <p class="texto-centro">Cargando...</p>
+  } @else {
+    <div class="suscripcion-layout">
+
+      <!-- ── SUSCRIPCIÓN ACTUAL ── -->
+      <section>
+        <h3 class="seccion-titulo">Suscripción activa</h3>
+        @if (!suscripcion) {
+          <mat-card>
+            <mat-card-content>
+              <div class="estado-vacio-inline">
+                <mat-icon>info</mat-icon>
+                <p>No tienes ninguna suscripción. Contacta con tu entrenador o el gimnasio para que te asignen un plan.</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        } @else {
+          <mat-card class="card-plan" [class.activa]="suscripcion.estado === 'ACTIVA'"
+                                      [class.vencida]="suscripcion.estado === 'VENCIDA' || suscripcion.estado === 'CANCELADA'">
+            <mat-card-content>
+              <div class="plan-cabecera">
+                <div>
+                  <h4 class="plan-nombre">{{ suscripcion.tipoSuscripcionNombre }}</h4>
+                  <span class="chip chip-{{ suscripcion.estado.toLowerCase() }}">{{ suscripcion.estado }}</span>
+                </div>
+                <div class="plan-precio">{{ suscripcion.precio | number:'1.2-2' }} €</div>
+              </div>
+
+              <div class="plan-fechas">
+                <span><mat-icon>event</mat-icon> Desde {{ suscripcion.fechaInicio | date:'dd/MM/yyyy' }}</span>
+                <span><mat-icon>event_busy</mat-icon> Hasta {{ suscripcion.fechaFin | date:'dd/MM/yyyy' }}</span>
+                @if (diasRestantes !== null && suscripcion.estado === 'ACTIVA') {
+                  <strong class="dias-restantes">{{ diasRestantes }} días restantes</strong>
+                }
+              </div>
+
+              @if (suscripcion.extras?.length) {
+                <mat-divider style="margin: 12px 0" />
+                <p class="label-extras">Extras contratados:</p>
+                <div class="extras-chips">
+                  @for (x of suscripcion.extras; track x.id) {
+                    <span class="chip chip-extra">{{ x.nombre }} · {{ x.precio | number:'1.2-2' }} €</span>
+                  }
+                </div>
+              }
+
+              @if (suscripcion.estado === 'PENDIENTE' || suscripcion.estado === 'VENCIDA') {
+                <mat-divider style="margin: 16px 0" />
+                <p class="aviso-pago">Tu suscripción requiere pago. Haz clic para pagar de forma segura con Stripe.</p>
+                <button mat-flat-button color="primary" (click)="pagar()" [disabled]="pagando">
+                  <mat-icon>payment</mat-icon>
+                  {{ pagando ? 'Redirigiendo...' : 'Pagar con Stripe' }}
+                </button>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      </section>
+
+      <!-- ── EXTRAS DISPONIBLES ── -->
+      @if (suscripcion?.estado === 'ACTIVA' && extrasDisponibles.length) {
+        <section>
+          <h3 class="seccion-titulo">Extras disponibles</h3>
+          <div class="extras-grid">
+            @for (e of extrasDisponibles; track e.id) {
+              <mat-card class="extra-card" [class.contratado]="tieneExtra(e.id)">
+                <mat-card-content>
+                  <div class="extra-row">
+                    <div>
+                      <strong>{{ e.nombre }}</strong>
+                      @if (e.descripcion) { <p class="extra-desc">{{ e.descripcion }}</p> }
+                      <span class="extra-precio">{{ e.precio | number:'1.2-2' }} €/mes</span>
+                    </div>
+                    @if (tieneExtra(e.id)) {
+                      <span class="chip chip-extra">Contratado</span>
+                    } @else {
+                      <button mat-stroked-button color="primary" (click)="agregarExtra(e.id)">
+                        <mat-icon>add</mat-icon> Añadir
+                      </button>
+                    }
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- ── HISTORIAL DE PAGOS ── -->
+      <section>
+        <h3 class="seccion-titulo">Historial de pagos</h3>
+        @if (!pagos.length) {
+          <p class="texto-muted">No hay pagos registrados.</p>
+        } @else {
+          <mat-card>
+            <mat-card-content>
+              <table mat-table [dataSource]="pagos" class="tabla-pagos">
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                  <td mat-cell *matCellDef="let p">{{ p.fecha | date:'dd/MM/yyyy' }}</td>
+                </ng-container>
+                <ng-container matColumnDef="plan">
+                  <th mat-header-cell *matHeaderCellDef>Plan</th>
+                  <td mat-cell *matCellDef="let p">{{ p.tipoSuscripcionNombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="importe">
+                  <th mat-header-cell *matHeaderCellDef>Importe</th>
+                  <td mat-cell *matCellDef="let p">{{ p.importe | number:'1.2-2' }} €</td>
+                </ng-container>
+                <ng-container matColumnDef="estado">
+                  <th mat-header-cell *matHeaderCellDef>Estado</th>
+                  <td mat-cell *matCellDef="let p">
+                    <span class="chip chip-{{ p.estado.toLowerCase() }}">{{ p.estado }}</span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="factura">
+                  <th mat-header-cell *matHeaderCellDef>Factura</th>
+                  <td mat-cell *matCellDef="let p">
+                    @if (p.facturaId) {
+                      <button mat-icon-button color="primary" (click)="descargarFactura(p)" matTooltip="Descargar factura">
+                        <mat-icon>download</mat-icon>
+                      </button>
+                      <small>{{ p.numeroFactura }}</small>
+                    } @else {
+                      <small class="texto-muted">—</small>
+                    }
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="columnasFactura"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnasFactura;"></tr>
+              </table>
+            </mat-card-content>
+          </mat-card>
+        }
+      </section>
+
+    </div>
+  }
+
+</app-layout>

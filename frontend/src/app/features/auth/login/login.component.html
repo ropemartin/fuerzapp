@@ -1,0 +1,62 @@
+<div class="login-wrapper">
+  <mat-card class="login-card">
+
+    <mat-card-header>
+      <div class="logo">
+        <mat-icon class="logo-icon">fitness_center</mat-icon>
+        <h1>Fuerzapp</h1>
+      </div>
+      <p class="subtitulo">Gestión de gimnasios</p>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="login()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="usuario@email.com" />
+          <mat-icon matSuffix>email</mat-icon>
+          @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+            <mat-error>El email es obligatorio</mat-error>
+          }
+          @if (form.get('email')?.hasError('email')) {
+            <mat-error>Introduce un email válido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="mostrarPassword ? 'text' : 'password'" formControlName="password" />
+          <button mat-icon-button matSuffix type="button" (click)="mostrarPassword = !mostrarPassword">
+            <mat-icon>{{ mostrarPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+            <mat-error>La contraseña es obligatoria</mat-error>
+          }
+        </mat-form-field>
+
+        @if (error) {
+          <p class="error-msg">
+            <mat-icon>error_outline</mat-icon>
+            {{ error }}
+          </p>
+        }
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="full-width btn-login"
+          [disabled]="form.invalid || cargando">
+          @if (cargando) {
+            <mat-spinner diameter="20" />
+          } @else {
+            Iniciar sesión
+          }
+        </button>
+
+      </form>
+    </mat-card-content>
+
+  </mat-card>
+</div>

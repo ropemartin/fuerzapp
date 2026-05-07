@@ -1,0 +1,54 @@
+<mat-sidenav-container class="sidenav-container">
+
+  <!-- Sidenav lateral -->
+  <mat-sidenav mode="side" opened class="sidenav">
+
+    <div class="sidenav-header">
+      <mat-icon class="logo-icon">fitness_center</mat-icon>
+      <span class="logo-text">Fuerzapp</span>
+    </div>
+
+    <mat-nav-list>
+      @for (item of navItems; track item.ruta) {
+        <a mat-list-item [routerLink]="item.ruta" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <!-- Contenido principal -->
+  <mat-sidenav-content class="content">
+
+    <!-- Toolbar superior -->
+    <mat-toolbar color="primary" class="toolbar">
+      <span>{{ titulo }}</span>
+      <span class="spacer"></span>
+
+      <button mat-icon-button [matMenuTriggerFor]="menuUsuario">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+
+      <mat-menu #menuUsuario="matMenu">
+        <div class="menu-usuario-info" mat-menu-item disabled>
+          <mat-icon>person</mat-icon>
+          <span>{{ authService.getUsuario()?.nombre }}</span>
+        </div>
+        <mat-divider />
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <!-- Contenido de cada vista -->
+    <div class="page-content">
+      <ng-content />
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

@@ -1,0 +1,119 @@
+<app-layout titulo="Ejercicios" [navItems]="navItems">
+
+  <div class="ejercicios-layout">
+
+    <!-- ── CABECERA ── -->
+    <div class="page-header">
+      <div class="header-left">
+        <h2>Biblioteca de ejercicios</h2>
+        <p class="subtitulo">Ejercicios predefinidos de la plataforma y propios del gimnasio</p>
+      </div>
+      <button mat-flat-button color="primary" (click)="creando = !creando">
+        <mat-icon>add</mat-icon> Nuevo ejercicio
+      </button>
+    </div>
+
+    <!-- ── FORMULARIO NUEVO ── -->
+    @if (creando) {
+      <mat-card class="form-card">
+        <mat-card-content>
+          <form [formGroup]="form" (ngSubmit)="crear()">
+            <div class="fila-2">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre *</mat-label>
+                <input matInput formControlName="nombre" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>URL de vídeo</mat-label>
+                <input matInput formControlName="videoUrl" placeholder="https://..." />
+              </mat-form-field>
+            </div>
+            <div class="fila-2">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Grupo muscular *</mat-label>
+                <mat-select formControlName="grupoMuscular">
+                  @for (g of gruposMusculares; track g) {
+                    <mat-option [value]="g">{{ g | titlecase }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Dificultad *</mat-label>
+                <mat-select formControlName="dificultad">
+                  @for (d of dificultades; track d) {
+                    <mat-option [value]="d">{{ d }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput formControlName="descripcion" rows="2"></textarea>
+            </mat-form-field>
+            <div class="form-actions">
+              <button mat-stroked-button type="button" (click)="creando = false">Cancelar</button>
+              <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+                Crear ejercicio
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- ── FILTRO ── -->
+    <mat-form-field appearance="outline" class="filtro-grupo">
+      <mat-label>Filtrar por grupo muscular</mat-label>
+      <mat-select [(ngModel)]="filtroGrupo" [ngModelOptions]="{standalone: true}">
+        <mat-option value="">Todos</mat-option>
+        @for (g of gruposMusculares; track g) {
+          <mat-option [value]="g">{{ g }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- ── LISTA ── -->
+    @if (cargando) {
+      <p class="texto-centro">Cargando...</p>
+    } @else if (ejerciciosFiltrados.length === 0) {
+      <div class="estado-vacio">
+        <mat-icon>sports_gymnastics</mat-icon>
+        <p>No hay ejercicios disponibles</p>
+      </div>
+    } @else {
+      <div class="grid-ejercicios">
+        @for (e of ejerciciosFiltrados; track e.id) {
+          <mat-card class="card-ejercicio" [class.predefinido]="e.esPredefinido">
+            <mat-card-content>
+              <div class="card-header-ej">
+                <div class="chips-row">
+                  <span class="chip-grupo chip-{{ e.grupoMuscular.toLowerCase() }}">{{ e.grupoMuscular }}</span>
+                  <span class="chip-dif chip-{{ e.dificultad?.toLowerCase() }}">{{ e.dificultad }}</span>
+                  @if (e.esPredefinido) {
+                    <span class="chip-plataforma">Plataforma</span>
+                  }
+                </div>
+                @if (!e.esPredefinido) {
+                  <button mat-icon-button color="warn" (click)="eliminar(e)" matTooltip="Eliminar">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+              <strong class="nombre-ej">{{ e.nombre }}</strong>
+              @if (e.descripcion) {
+                <p class="desc-ej">{{ e.descripcion }}</p>
+              }
+              @if (e.videoUrl) {
+                <a [href]="e.videoUrl" target="_blank" class="video-link">
+                  <mat-icon>play_circle</mat-icon> Ver vídeo
+                </a>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+
+  </div>
+
+</app-layout>

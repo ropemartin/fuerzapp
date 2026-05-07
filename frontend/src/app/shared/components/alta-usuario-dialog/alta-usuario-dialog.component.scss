@@ -1,0 +1,22 @@
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+mat-dialog-content {
+  min-width: 420px;
+  padding-top: 16px !important;
+}
+
+.full-width { width: 100%; margin-bottom: 8px; }
+
+.fila-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+  mat-form-field { width: 100%; }
+}
+
+mat-dialog-actions { gap: 8px; padding: 16px 24px !important; }

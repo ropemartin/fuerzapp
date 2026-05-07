@@ -1,0 +1,90 @@
+<app-layout titulo="Panel del Propietario" [navItems]="navItems">
+
+  <!-- Selector de gimnasio si tiene más de uno -->
+  @if (misGimnasios.length > 1) {
+    <mat-card class="selector-card">
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Gimnasio activo</mat-label>
+          <mat-select [(ngModel)]="gimnasioSeleccionado" (ngModelChange)="seleccionarGimnasio($event)">
+            @for (g of misGimnasios; track g.id) {
+              <mat-option [value]="g">{{ g.nombre }} — {{ g.ciudad }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matSuffix>fitness_center</mat-icon>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!gimnasioSeleccionado && !cargando) {
+    <div class="sin-gimnasio">
+      <mat-icon>fitness_center</mat-icon>
+      <h3>No tienes gimnasios asignados</h3>
+      <p>Contacta con el administrador de la plataforma.</p>
+    </div>
+  }
+
+  @if (gimnasioSeleccionado) {
+    <!-- Cabecera del gimnasio -->
+    <div class="gym-header">
+      <div>
+        <h2>{{ gimnasioSeleccionado.nombre }}</h2>
+        <p class="gym-meta">
+          <mat-icon>location_on</mat-icon> {{ gimnasioSeleccionado.ciudad || 'Sin ciudad' }}
+          &nbsp;·&nbsp;
+          <mat-icon>phone</mat-icon> {{ gimnasioSeleccionado.telefono || 'Sin teléfono' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    @if (cargando) {
+      <p class="cargando">Cargando estadísticas...</p>
+    } @else {
+      <div class="stats-grid">
+        <mat-card class="stat-card" (click)="irA('/propietario/entrenadores')">
+          <mat-card-content>
+            <mat-icon class="stat-icon azul">sports</mat-icon>
+            <span class="stat-num">{{ stats.entrenadores }}</span>
+            <span class="stat-label">Entrenadores</span>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card" (click)="irA('/propietario/clientes')">
+          <mat-card-content>
+            <mat-icon class="stat-icon verde">group</mat-icon>
+            <span class="stat-num">{{ stats.clientes }}</span>
+            <span class="stat-label">Clientes</span>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card" (click)="irA('/propietario/suscripciones')">
+          <mat-card-content>
+            <mat-icon class="stat-icon morado">card_membership</mat-icon>
+            <span class="stat-num">—</span>
+            <span class="stat-label">Suscripciones</span>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Accesos rápidos -->
+      <h3 class="section-title">Accesos rápidos</h3>
+      <div class="accesos-grid">
+        <button mat-stroked-button (click)="irA('/propietario/entrenadores')">
+          <mat-icon>sports</mat-icon>
+          Gestionar entrenadores
+        </button>
+        <button mat-stroked-button (click)="irA('/propietario/clientes')">
+          <mat-icon>group</mat-icon>
+          Gestionar clientes
+        </button>
+        <button mat-stroked-button (click)="irA('/propietario/suscripciones')">
+          <mat-icon>card_membership</mat-icon>
+          Suscripciones y tarifas
+        </button>
+      </div>
+    }
+  }
+
+</app-layout>

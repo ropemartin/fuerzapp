@@ -1,0 +1,132 @@
+<h2 mat-dialog-title>
+  <mat-icon>fitness_center</mat-icon>
+  Nuevo gimnasio
+</h2>
+
+<mat-dialog-content>
+  <mat-stepper orientation="vertical" #stepper>
+
+    <!-- PASO 1: Datos del gimnasio -->
+    <mat-step [stepControl]="formGimnasio" label="Datos del gimnasio">
+      <form [formGroup]="formGimnasio">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre del gimnasio *</mat-label>
+          <input matInput formControlName="nombre" />
+          @if (formGimnasio.get('nombre')?.hasError('required') && formGimnasio.get('nombre')?.touched) {
+            <mat-error>El nombre es obligatorio</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="fila-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Ciudad</mat-label>
+            <input matInput formControlName="ciudad" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="telefono" />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="direccion" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email del gimnasio</mat-label>
+          <input matInput type="email" formControlName="email" />
+          @if (formGimnasio.get('email')?.hasError('email')) {
+            <mat-error>Email no válido</mat-error>
+          }
+        </mat-form-field>
+
+        <div>
+          <button mat-flat-button color="primary" matStepperNext
+            [disabled]="formGimnasio.invalid">
+            Siguiente
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- PASO 2: Datos del propietario -->
+    <mat-step [stepControl]="formPropietario" label="Datos del propietario">
+      <form [formGroup]="formPropietario">
+
+        <div class="fila-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre *</mat-label>
+            <input matInput formControlName="nombre" />
+            @if (formPropietario.get('nombre')?.hasError('required') && formPropietario.get('nombre')?.touched) {
+              <mat-error>Obligatorio</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellidos *</mat-label>
+            <input matInput formControlName="apellidos" />
+            @if (formPropietario.get('apellidos')?.hasError('required') && formPropietario.get('apellidos')?.touched) {
+              <mat-error>Obligatorio</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email *</mat-label>
+          <input matInput type="email" formControlName="email" />
+          @if (formPropietario.get('email')?.hasError('email')) {
+            <mat-error>Email no válido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña *</mat-label>
+          <input matInput [type]="mostrarPassword ? 'text' : 'password'" formControlName="password" />
+          <button mat-icon-button matSuffix type="button" (click)="mostrarPassword = !mostrarPassword">
+            <mat-icon>{{ mostrarPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (formPropietario.get('password')?.hasError('minlength')) {
+            <mat-error>Mínimo 6 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" />
+        </mat-form-field>
+
+        <div class="stepper-actions">
+          <button mat-stroked-button matStepperPrevious type="button">
+            <mat-icon>arrow_back</mat-icon>
+            Anterior
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+  </mat-stepper>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cancelar()" [disabled]="cargando">
+    Cancelar
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="guardar()"
+    [disabled]="formGimnasio.invalid || formPropietario.invalid || cargando">
+    @if (cargando) {
+      <mat-spinner diameter="18" />
+    } @else {
+      <ng-container>
+        <mat-icon>save</mat-icon>
+        Crear gimnasio
+      </ng-container>
+    }
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,89 @@
+<app-layout titulo="Entrenadores" [navItems]="navItems">
+
+  <div class="page-header">
+    <div>
+      <h2>Entrenadores</h2>
+      <p class="subtitulo">{{ contexto.obtener()?.nombre }}</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="abrirDialogoAlta()">
+      <mat-icon>person_add</mat-icon>
+      Nuevo entrenador
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      @if (cargando) {
+        <div class="estado-vacio"><p>Cargando...</p></div>
+      } @else if (entrenadores.length === 0) {
+        <div class="estado-vacio">
+          <mat-icon>sports</mat-icon>
+          <p>No hay entrenadores dados de alta</p>
+          <button mat-stroked-button color="primary" (click)="abrirDialogoAlta()">
+            Añadir entrenador
+          </button>
+        </div>
+      } @else {
+        <table mat-table [dataSource]="entrenadores">
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let e">
+              <div class="avatar-cell">
+                <div class="avatar" [class.avatar-inactivo]="!e.activoEnGimnasio">{{ e.nombre[0] }}{{ e.apellidos[0] }}</div>
+                <span [class.texto-inactivo]="!e.activoEnGimnasio">{{ e.nombre }} {{ e.apellidos }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let e" [class.texto-inactivo]="!e.activoEnGimnasio">{{ e.email }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="telefono">
+            <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+            <td mat-cell *matCellDef="let e" [class.texto-inactivo]="!e.activoEnGimnasio">{{ e.telefono || '—' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let e">
+              @if (e.activoEnGimnasio) {
+                <span class="chip chip-activo">Activo</span>
+              } @else {
+                <span class="chip chip-inactivo">Inactivo</span>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let e">
+              @if (procesando[e.id]) {
+                <mat-spinner diameter="24" />
+              } @else {
+                <button mat-icon-button matTooltip="Editar datos" (click)="editarPerfil(e)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                @if (e.activoEnGimnasio) {
+                  <button mat-icon-button color="warn" matTooltip="Dar de baja" (click)="darDeBaja(e)">
+                    <mat-icon>person_off</mat-icon>
+                  </button>
+                } @else {
+                  <button mat-icon-button color="primary" matTooltip="Reactivar" (click)="reactivar(e)">
+                    <mat-icon>how_to_reg</mat-icon>
+                  </button>
+                }
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnas;" [class.fila-inactiva]="!row.activoEnGimnasio"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+</app-layout>

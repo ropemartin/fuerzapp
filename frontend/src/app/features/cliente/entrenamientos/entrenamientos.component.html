@@ -1,0 +1,137 @@
+<app-layout titulo="Mis entrenamientos" [navItems]="navItems">
+
+  @if (cargando) {
+    <p class="texto-centro">Cargando...</p>
+  } @else {
+    <mat-tab-group animationDuration="150ms">
+
+      <!-- TAB: Sesiones individuales -->
+      <mat-tab label="Sesiones individuales ({{ miasSesiones.length }})">
+        <div class="tab-body">
+          @if (!miasSesiones.length) {
+            <div class="estado-vacio">
+              <mat-icon>person</mat-icon>
+              <p>No tienes sesiones individuales asignadas</p>
+            </div>
+          } @else {
+            @for (s of miasSesiones; track s.id) {
+              <mat-card class="sesion-card" [class.pasada]="!esProxima(s.fechaHora)">
+                <mat-card-content>
+                  <div class="sesion-row">
+                    <mat-icon class="sesion-icon">person</mat-icon>
+                    <div class="sesion-info">
+                      <strong>{{ s.entrenamientoNombre }}</strong>
+                      <p>{{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }} · {{ s.duracionMinutos || '—' }} min</p>
+                      <small>{{ s.ubicacion || 'Sin ubicación' }} · Entrenador: {{ s.entrenadorNombre }}</small>
+                    </div>
+                    @if (!esProxima(s.fechaHora)) {
+                      <span class="chip chip-pasada">Pasada</span>
+                    } @else {
+                      <span class="chip chip-proxima">Próxima</span>
+                    }
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          }
+        </div>
+      </mat-tab>
+
+      <!-- TAB: Sesiones grupales -->
+      <mat-tab label="Sesiones grupales ({{ sesionesGrupales.length }})">
+        <div class="tab-body">
+          @if (!sesionesGrupales.length) {
+            <div class="estado-vacio">
+              <mat-icon>groups</mat-icon>
+              <p>No estás inscrito en ninguna sesión grupal</p>
+            </div>
+          } @else {
+            @for (s of sesionesGrupales; track s.id) {
+              <mat-card class="sesion-card" [class.pasada]="!esProxima(s.fechaHora)">
+                <mat-card-content>
+                  <div class="sesion-row">
+                    <mat-icon class="sesion-icon">groups</mat-icon>
+                    <div class="sesion-info">
+                      <strong>{{ s.entrenamientoNombre }}</strong>
+                      <p>{{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }} · {{ s.duracionMinutos || '—' }} min</p>
+                      <small>
+                        {{ s.ubicacion || 'Sin ubicación' }} · Entrenador: {{ s.entrenadorNombre }}
+                        @if (s.capacidadMaxima) { · {{ s.plazasOcupadas }}/{{ s.capacidadMaxima }} plazas }
+                      </small>
+                    </div>
+                    @if (!esProxima(s.fechaHora)) {
+                      <span class="chip chip-pasada">Pasada</span>
+                    } @else {
+                      <span class="chip chip-proxima">Próxima</span>
+                    }
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          }
+        </div>
+      </mat-tab>
+
+      <!-- TAB: Planes específicos -->
+      <mat-tab label="Planes asignados ({{ planesEspecificos.length }})">
+        <div class="tab-body">
+          @if (!planesEspecificos.length) {
+            <div class="estado-vacio">
+              <mat-icon>assignment</mat-icon>
+              <p>No tienes planes de entrenamiento asignados</p>
+            </div>
+          } @else {
+            @for (p of planesEspecificos; track p.id) {
+              <mat-expansion-panel class="plan-panel" [class.completado]="p.completado">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon class="plan-icon">{{ p.completado ? 'check_circle' : 'fitness_center' }}</mat-icon>
+                    {{ p.entrenamientoNombre }}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    Por {{ p.entrenadorNombre }} · {{ p.fechaAsignacion | date:'dd/MM/yyyy' }}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                @if (p.notas) {
+                  <p class="plan-notas">{{ p.notas }}</p>
+                }
+
+                <!-- Ejercicios del plan -->
+                @if (p.ejercicios?.length) {
+                  <div class="ejercicios-lista">
+                    @for (ee of p.ejercicios; track ee.id) {
+                      <div class="ejercicio-mini">
+                        <span class="orden-badge">{{ ee.orden }}</span>
+                        <div>
+                          <strong>{{ ee.ejercicioNombre }}</strong>
+                          <small>
+                            @if (ee.series) { {{ ee.series }} series · }
+                            @if (ee.repeticiones) { {{ ee.repeticiones }} reps · }
+                            @if (ee.duracionSegundos) { {{ ee.duracionSegundos }}s · }
+                            @if (ee.descansoSegundos) { {{ ee.descansoSegundos }}s descanso }
+                          </small>
+                          @if (ee.notas) { <p class="nota-ej">{{ ee.notas }}</p> }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                <mat-action-row>
+                  <button mat-stroked-button [color]="p.completado ? 'warn' : 'primary'"
+                          (click)="marcarCompletado(p)">
+                    <mat-icon>{{ p.completado ? 'undo' : 'check' }}</mat-icon>
+                    {{ p.completado ? 'Marcar como pendiente' : 'Marcar como completado' }}
+                  </button>
+                </mat-action-row>
+              </mat-expansion-panel>
+            }
+          }
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  }
+
+</app-layout>

@@ -1,0 +1,138 @@
+.ejercicios-layout {
+  max-width: 1100px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  h2 { margin: 0 0 4px; font-size: 1.4rem; font-weight: 600; }
+  .subtitulo { margin: 0; color: #666; font-size: 0.88rem; }
+}
+
+.form-card {
+  margin-bottom: 24px;
+  mat-card-content { padding: 20px !important; }
+}
+
+.fila-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  mat-form-field { width: 100%; }
+}
+
+.full-width { width: 100%; }
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.filtro-grupo {
+  width: 260px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+// ── Grid de ejercicios ────────────────────────────────────────────────────────
+
+.grid-ejercicios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.card-ejercicio {
+  transition: box-shadow 0.2s;
+
+  &:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+
+  &.predefinido { border-left: 3px solid #1976d2; }
+
+  mat-card-content { padding: 14px 16px !important; }
+}
+
+.card-header-ej {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.nombre-ej {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.desc-ej {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.82rem;
+  color: #1976d2;
+  text-decoration: none;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+
+  &:hover { text-decoration: underline; }
+}
+
+// ── Chips ─────────────────────────────────────────────────────────────────────
+
+.chip-grupo, .chip-dif, .chip-plataforma {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.chip-plataforma {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.chip-dif {
+  &.chip-principiante { background: #e8f5e9; color: #2e7d32; }
+  &.chip-intermedio   { background: #fff8e1; color: #f57f17; }
+  &.chip-avanzado     { background: #ffebee; color: #c62828; }
+}
+
+.chip-grupo {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+// ── Estado vacío / utilidades ─────────────────────────────────────────────────
+
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  gap: 12px;
+  color: #888;
+
+  mat-icon { font-size: 56px; width: 56px; height: 56px; opacity: 0.3; }
+}
+
+.texto-centro { text-align: center; color: #888; padding: 32px 0; }

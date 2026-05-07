@@ -1,0 +1,196 @@
+.layout-dos-columnas {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  align-items: start;
+  height: calc(100vh - 80px);
+}
+
+// ── Columna izquierda ────────────────────────────────────────────────────────
+
+.col-lista {
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+  padding-right: 4px;
+}
+
+.lista-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  h2 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+}
+
+.full-width { width: 100%; }
+
+.form-nuevo {
+  margin-bottom: 16px;
+
+  mat-card-content { padding: 16px !important; }
+
+  .form-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+}
+
+.tarjeta-entrenamiento {
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  border: 2px solid transparent;
+
+  &:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+
+  &.seleccionada {
+    border-color: #1976d2;
+    box-shadow: 0 4px 16px rgba(25,118,210,0.2);
+  }
+
+  mat-card-content { padding: 12px 16px !important; }
+}
+
+.tarjeta-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chip-tipo {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-left: 8px;
+  vertical-align: middle;
+
+  &.chip-grupal     { background: #e3f2fd; color: #1565c0; }
+  &.chip-individual { background: #f3e5f5; color: #6a1b9a; }
+  &.chip-especifico { background: #e8f5e9; color: #2e7d32; }
+}
+
+.descripcion {
+  margin: 4px 0 2px;
+  font-size: 0.82rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+// ── Columna derecha ──────────────────────────────────────────────────────────
+
+.col-detalle {
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+.tab-body {
+  padding: 20px 0 0;
+}
+
+// Ejercicios dentro del entrenamiento
+
+.ejercicio-item {
+  margin-bottom: 8px;
+
+  mat-card-content { padding: 10px 14px !important; }
+}
+
+.ejercicio-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.orden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1976d2;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ejercicio-info {
+  flex: 1;
+
+  strong { display: block; font-size: 0.95rem; }
+
+  small { color: #666; font-size: 0.78rem; }
+
+  .notas { margin: 4px 0 0; font-size: 0.8rem; color: #888; font-style: italic; }
+}
+
+// Formulario añadir ejercicio
+
+.fila-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+
+  mat-form-field { width: 100%; }
+}
+
+.fila-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  mat-form-field { width: 100%; }
+}
+
+// Sesiones
+
+.sesion-item {
+  margin-bottom: 10px;
+
+  mat-card-content { padding: 12px 16px !important; }
+}
+
+.sesion-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  p { margin: 4px 0 0; font-size: 0.85rem; color: #555; }
+  small { color: #888; font-size: 0.78rem; }
+}
+
+.sesion-acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+// Estados vacíos y utilidades
+
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 12px;
+  color: #888;
+  text-align: center;
+
+  mat-icon { font-size: 48px; width: 48px; height: 48px; opacity: 0.3; }
+}
+
+.texto-centro { text-align: center; color: #888; }
+.texto-muted  { color: #888; font-size: 0.9rem; }

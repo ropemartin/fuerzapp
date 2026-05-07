@@ -1,0 +1,89 @@
+<app-layout titulo="Panel del Entrenador" [navItems]="navItems">
+
+  @if (misGimnasios.length > 1) {
+    <mat-card class="selector-card">
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Gimnasio activo</mat-label>
+          <mat-select [(ngModel)]="gimnasioSeleccionado" (ngModelChange)="seleccionarGimnasio($event)">
+            @for (g of misGimnasios; track g.id) {
+              <mat-option [value]="g">{{ g.nombre }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matSuffix>fitness_center</mat-icon>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (gimnasioSeleccionado) {
+    <div class="gym-header">
+      <h2>{{ gimnasioSeleccionado.nombre }}</h2>
+      <p class="gym-meta"><mat-icon>location_on</mat-icon> {{ gimnasioSeleccionado.ciudad || 'Sin ciudad' }}</p>
+    </div>
+
+    @if (cargando) {
+      <p class="cargando">Cargando...</p>
+    } @else {
+      <div class="stats-grid">
+        <mat-card class="stat-card" (click)="irA('/entrenador/entrenamientos')">
+          <mat-card-content>
+            <mat-icon class="stat-icon azul">fitness_center</mat-icon>
+            <span class="stat-num">{{ stats.entrenamientos }}</span>
+            <span class="stat-label">Entrenamientos</span>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <mat-icon class="stat-icon naranja">today</mat-icon>
+            <span class="stat-num">{{ stats.sesionesHoy }}</span>
+            <span class="stat-label">Sesiones hoy</span>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card" (click)="irA('/entrenador/ejercicios')">
+          <mat-card-content>
+            <mat-icon class="stat-icon verde">sports_gymnastics</mat-icon>
+            <span class="stat-num">—</span>
+            <span class="stat-label">Ejercicios</span>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Próximas sesiones -->
+      @if (proximasSesiones.length > 0) {
+        <h3 class="section-title">Próximas sesiones</h3>
+        <div class="sesiones-list">
+          @for (s of proximasSesiones; track s.id) {
+            <mat-card class="sesion-card">
+              <mat-card-content>
+                <div class="sesion-info">
+                  <mat-icon [class]="'tipo-' + s.tipoEntrenamiento.toLowerCase()">
+                    {{ s.tipoEntrenamiento === 'GRUPAL' ? 'group' : 'person' }}
+                  </mat-icon>
+                  <div>
+                    <strong>{{ s.entrenamientoNombre }}</strong>
+                    <p>{{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }} · {{ s.ubicacion || 'Sin ubicación' }}</p>
+                  </div>
+                  <span class="chip-tipo">{{ s.tipoEntrenamiento }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      }
+
+      <h3 class="section-title">Accesos rápidos</h3>
+      <div class="accesos-grid">
+        <button mat-stroked-button (click)="irA('/entrenador/entrenamientos')">
+          <mat-icon>add</mat-icon> Crear entrenamiento
+        </button>
+        <button mat-stroked-button (click)="irA('/entrenador/ejercicios')">
+          <mat-icon>sports_gymnastics</mat-icon> Ver ejercicios
+        </button>
+      </div>
+    }
+  }
+
+</app-layout>

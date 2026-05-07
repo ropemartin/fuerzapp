@@ -1,0 +1,65 @@
+.page-header {
+  margin-bottom: 24px;
+  h2 { margin: 0 0 4px; font-size: 1.5rem; font-weight: 600; }
+  .subtitulo { margin: 0; color: #666; font-size: 0.9rem; }
+}
+
+.tab-content { padding: 24px 0 0; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.form-card {
+  mat-card-content { padding: 16px !important; }
+}
+
+.full-width { width: 100%; margin-bottom: 8px; }
+
+.fila-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  mat-form-field { width: 100%; }
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+mat-card { mat-card-content { padding: 0 !important; } }
+table { width: 100%; }
+
+.text-muted { color: #888; font-size: 0.8rem; }
+
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin: 2px;
+
+  &.chip-activa    { background: #e8f5e9; color: #2e7d32; }
+  &.chip-pendiente { background: #fff8e1; color: #f57f17; }
+  &.chip-vencida   { background: #ffebee; color: #c62828; }
+  &.chip-cancelada { background: #f5f5f5; color: #666; }
+  &.chip-extra     { background: #e3f2fd; color: #1565c0; }
+}
+
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  gap: 12px;
+  color: #888;
+  mat-icon { font-size: 48px; width: 48px; height: 48px; opacity: 0.3; }
+}

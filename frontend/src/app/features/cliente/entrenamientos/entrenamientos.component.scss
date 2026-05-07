@@ -1,0 +1,132 @@
+.tab-body {
+  padding: 20px 0 0;
+}
+
+// ── Tarjetas de sesión ────────────────────────────────────────────────────────
+
+.sesion-card {
+  margin-bottom: 12px;
+  border-left: 4px solid #1976d2;
+  transition: box-shadow 0.2s;
+
+  &:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+  &.pasada { border-left-color: #bbb; opacity: 0.8; }
+
+  mat-card-content { padding: 12px 16px !important; }
+}
+
+.sesion-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sesion-icon {
+  color: #1976d2;
+  flex-shrink: 0;
+}
+
+.sesion-info {
+  flex: 1;
+
+  strong { display: block; font-size: 0.95rem; }
+  p      { margin: 4px 0 2px; font-size: 0.85rem; color: #444; }
+  small  { color: #777; font-size: 0.78rem; }
+}
+
+// ── Planes específicos ────────────────────────────────────────────────────────
+
+.plan-panel {
+  margin-bottom: 10px;
+
+  &.completado {
+    background: #f9f9f9;
+    mat-expansion-panel-header { color: #888; }
+  }
+}
+
+.plan-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+  color: #7b1fa2;
+}
+
+.plan-notas {
+  font-size: 0.88rem;
+  color: #555;
+  font-style: italic;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  background: #fafafa;
+  border-left: 3px solid #ddd;
+  border-radius: 2px;
+}
+
+// Ejercicios dentro de un plan
+
+.ejercicios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ejercicio-mini {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #fafafa;
+  border-radius: 8px;
+
+  strong { display: block; font-size: 0.9rem; }
+  small  { color: #666; font-size: 0.78rem; }
+
+  .nota-ej { margin: 4px 0 0; font-size: 0.78rem; color: #888; font-style: italic; }
+}
+
+.orden-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #7b1fa2;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+// ── Chips ─────────────────────────────────────────────────────────────────────
+
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.chip-proxima { background: #e8f5e9; color: #2e7d32; }
+  &.chip-pasada  { background: #f5f5f5; color: #888; }
+}
+
+// ── Estado vacío ─────────────────────────────────────────────────────────────
+
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  gap: 12px;
+  color: #888;
+
+  mat-icon { font-size: 56px; width: 56px; height: 56px; opacity: 0.3; }
+}
+
+.texto-centro { text-align: center; color: #888; padding: 40px 0; }

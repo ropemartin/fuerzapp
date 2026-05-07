@@ -1,0 +1,281 @@
+<app-layout titulo="Entrenamientos" [navItems]="navItems">
+
+  <div class="layout-dos-columnas">
+
+    <!-- ── COLUMNA IZQUIERDA: lista de entrenamientos ── -->
+    <div class="col-lista">
+
+      <div class="lista-header">
+        <h2>Entrenamientos</h2>
+        <button mat-flat-button color="primary" (click)="creandoEntrenamiento = !creandoEntrenamiento">
+          <mat-icon>add</mat-icon> Nuevo
+        </button>
+      </div>
+
+      <!-- Filtro por tipo -->
+      <mat-form-field appearance="outline" class="full-width" style="margin-bottom:12px">
+        <mat-label>Filtrar por tipo</mat-label>
+        <mat-select [(ngModel)]="filtroTipo" (ngModelChange)="cargarEntrenamientos()">
+          <mat-option value="">Todos</mat-option>
+          @for (t of tiposDisponibles; track t) {
+            <mat-option [value]="t">{{ t }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Formulario nuevo entrenamiento -->
+      @if (creandoEntrenamiento) {
+        <mat-card class="form-nuevo">
+          <mat-card-content>
+            <form [formGroup]="formEntrenamiento" (ngSubmit)="crearEntrenamiento()">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre *</mat-label>
+                <input matInput formControlName="nombre" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descripción</mat-label>
+                <textarea matInput formControlName="descripcion" rows="2"></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Tipo *</mat-label>
+                <mat-select formControlName="tipo">
+                  <mat-option value="GRUPAL">Grupal</mat-option>
+                  <mat-option value="INDIVIDUAL">Individual</mat-option>
+                  <mat-option value="ESPECIFICO">Específico</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="form-actions">
+                <button mat-stroked-button type="button" (click)="creandoEntrenamiento = false">Cancelar</button>
+                <button mat-flat-button color="primary" type="submit" [disabled]="formEntrenamiento.invalid">
+                  Crear
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      <!-- Lista -->
+      @if (cargando) {
+        <p class="texto-centro">Cargando...</p>
+      } @else if (entrenamientos.length === 0) {
+        <div class="estado-vacio">
+          <mat-icon>fitness_center</mat-icon>
+          <p>No hay entrenamientos</p>
+        </div>
+      } @else {
+        @for (e of entrenamientos; track e.id) {
+          <mat-card class="tarjeta-entrenamiento"
+            [class.seleccionada]="seleccionado?.id === e.id"
+            (click)="seleccionar(e)">
+            <mat-card-content>
+              <div class="tarjeta-row">
+                <div>
+                  <strong>{{ e.nombre }}</strong>
+                  <span class="chip-tipo chip-{{ e.tipo.toLowerCase() }}">{{ e.tipo }}</span>
+                  <p class="descripcion">{{ e.descripcion || 'Sin descripción' }}</p>
+                  <small>{{ e.ejercicios?.length ?? 0 }} ejercicios</small>
+                </div>
+                <button mat-icon-button color="warn" (click)="$event.stopPropagation(); eliminar(e)" matTooltip="Eliminar">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      }
+    </div>
+
+    <!-- ── COLUMNA DERECHA: detalle del entrenamiento ── -->
+    <div class="col-detalle">
+      @if (!seleccionado) {
+        <div class="estado-vacio">
+          <mat-icon>touch_app</mat-icon>
+          <p>Selecciona un entrenamiento para gestionarlo</p>
+        </div>
+      } @else {
+        <mat-tab-group animationDuration="150ms">
+
+          <!-- TAB: Ejercicios -->
+          <mat-tab label="Ejercicios ({{ seleccionado.ejercicios?.length ?? 0 }})">
+            <div class="tab-body">
+
+              <!-- Lista de ejercicios del entrenamiento -->
+              @if (!seleccionado.ejercicios?.length) {
+                <p class="texto-muted">Sin ejercicios aún</p>
+              } @else {
+                @for (ee of seleccionado.ejercicios; track ee.id) {
+                  <mat-card class="ejercicio-item">
+                    <mat-card-content>
+                      <div class="ejercicio-row">
+                        <span class="orden">{{ ee.orden }}</span>
+                        <div class="ejercicio-info">
+                          <strong>{{ ee.ejercicioNombre }}</strong>
+                          <small>
+                            @if (ee.series) { {{ ee.series }} series · }
+                            @if (ee.repeticiones) { {{ ee.repeticiones }} reps · }
+                            @if (ee.duracionSegundos) { {{ ee.duracionSegundos }}s · }
+                            @if (ee.descansoSegundos) { {{ ee.descansoSegundos }}s descanso }
+                          </small>
+                          @if (ee.notas) { <p class="notas">{{ ee.notas }}</p> }
+                        </div>
+                        <button mat-icon-button color="warn" (click)="quitarEjercicio(ee.id)" matTooltip="Quitar">
+                          <mat-icon>remove_circle</mat-icon>
+                        </button>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                }
+              }
+
+              <mat-divider style="margin: 16px 0" />
+
+              <!-- Formulario añadir ejercicio -->
+              <h4>Añadir ejercicio</h4>
+              <form [formGroup]="formEjercicio" (ngSubmit)="agregarEjercicio()">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Ejercicio *</mat-label>
+                  <mat-select formControlName="ejercicioId">
+                    @for (ej of ejerciciosDisponibles; track ej.id) {
+                      <mat-option [value]="ej.id">{{ ej.nombre }} ({{ ej.grupoMuscular }})</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <div class="fila-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Orden</mat-label>
+                    <input matInput type="number" formControlName="orden" min="1" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Series</mat-label>
+                    <input matInput type="number" formControlName="series" min="1" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Reps</mat-label>
+                    <input matInput type="number" formControlName="repeticiones" min="1" />
+                  </mat-form-field>
+                </div>
+                <div class="fila-2">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Duración (seg)</mat-label>
+                    <input matInput type="number" formControlName="duracionSegundos" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Descanso (seg)</mat-label>
+                    <input matInput type="number" formControlName="descansoSegundos" />
+                  </mat-form-field>
+                </div>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Notas</mat-label>
+                  <input matInput formControlName="notas" />
+                </mat-form-field>
+                <button mat-flat-button color="primary" type="submit" [disabled]="formEjercicio.invalid">
+                  <mat-icon>add</mat-icon> Añadir
+                </button>
+              </form>
+            </div>
+          </mat-tab>
+
+          <!-- TAB: Sesiones (solo GRUPAL e INDIVIDUAL) -->
+          @if (seleccionado.tipo !== 'ESPECIFICO') {
+            <mat-tab label="Sesiones ({{ sesiones.length }})">
+              <div class="tab-body">
+
+                @for (s of sesiones; track s.id) {
+                  <mat-card class="sesion-item">
+                    <mat-card-content>
+                      <div class="sesion-row">
+                        <div>
+                          <strong>{{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }}</strong>
+                          <p>{{ s.ubicacion || 'Sin ubicación' }} · {{ s.duracionMinutos }} min</p>
+                          @if (s.capacidadMaxima) {
+                            <small>{{ s.plazasOcupadas }}/{{ s.capacidadMaxima }} plazas</small>
+                          }
+                        </div>
+                        <div class="sesion-acciones">
+                          @if (seleccionado.tipo === 'INDIVIDUAL') {
+                            <mat-form-field appearance="outline" style="width:160px">
+                              <mat-label>Asignar cliente</mat-label>
+                              <mat-select [formControl]="$any(formAsignar.get('clienteId'))">
+                                @for (c of clientes; track c.id) {
+                                  <mat-option [value]="c.id">{{ c.nombre }} {{ c.apellidos }}</mat-option>
+                                }
+                              </mat-select>
+                            </mat-form-field>
+                            <button mat-stroked-button (click)="asignarClienteASesion(s.id)">
+                              Asignar
+                            </button>
+                          }
+                          <button mat-icon-button color="warn" (click)="eliminarSesion(s.id)" matTooltip="Eliminar sesión">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                }
+
+                <mat-divider style="margin: 16px 0" />
+                <h4>Nueva sesión</h4>
+                <form [formGroup]="formSesion" (ngSubmit)="crearSesion()">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Fecha y hora *</mat-label>
+                    <input matInput type="datetime-local" formControlName="fechaHora" />
+                  </mat-form-field>
+                  <div class="fila-2">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Duración (min)</mat-label>
+                      <input matInput type="number" formControlName="duracionMinutos" />
+                    </mat-form-field>
+                    @if (seleccionado.tipo === 'GRUPAL') {
+                      <mat-form-field appearance="outline">
+                        <mat-label>Plazas máx.</mat-label>
+                        <input matInput type="number" formControlName="capacidadMaxima" />
+                      </mat-form-field>
+                    }
+                  </div>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Ubicación</mat-label>
+                    <input matInput formControlName="ubicacion" placeholder="ej: Sala A" />
+                  </mat-form-field>
+                  <button mat-flat-button color="primary" type="submit" [disabled]="formSesion.invalid">
+                    <mat-icon>add</mat-icon> Crear sesión
+                  </button>
+                </form>
+              </div>
+            </mat-tab>
+          }
+
+          <!-- TAB: Asignar a cliente (solo ESPECIFICO) -->
+          @if (seleccionado.tipo === 'ESPECIFICO') {
+            <mat-tab label="Asignar a cliente">
+              <div class="tab-body">
+                <p class="texto-muted">Asigna este plan de entrenamiento específico a un cliente.</p>
+                <form [formGroup]="formAsignar" (ngSubmit)="asignarEspecifico()">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Cliente *</mat-label>
+                    <mat-select formControlName="clienteId">
+                      @for (c of clientes; track c.id) {
+                        <mat-option [value]="c.id">{{ c.nombre }} {{ c.apellidos }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Notas para el cliente</mat-label>
+                    <textarea matInput formControlName="notas" rows="3"></textarea>
+                  </mat-form-field>
+                  <button mat-flat-button color="primary" type="submit" [disabled]="formAsignar.invalid">
+                    <mat-icon>send</mat-icon> Asignar entrenamiento
+                  </button>
+                </form>
+              </div>
+            </mat-tab>
+          }
+
+        </mat-tab-group>
+      }
+    </div>
+
+  </div>
+
+</app-layout>

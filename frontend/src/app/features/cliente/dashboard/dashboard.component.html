@@ -1,0 +1,94 @@
+<app-layout titulo="Mi panel" [navItems]="navItems">
+
+  @if (cargando) {
+    <p class="texto-centro">Cargando...</p>
+  } @else {
+    <div class="dashboard-grid">
+
+      <!-- ── Suscripción ── -->
+      <mat-card class="card-suscripcion" [class.activa]="suscripcion?.estado === 'ACTIVA'"
+                                         [class.vencida]="suscripcion?.estado === 'VENCIDA' || suscripcion?.estado === 'CANCELADA'">
+        <mat-card-content>
+          <div class="card-icon-row">
+            <mat-icon>card_membership</mat-icon>
+            <h3>Mi suscripción</h3>
+          </div>
+          @if (!suscripcion) {
+            <p class="texto-muted">No tienes ninguna suscripción activa.</p>
+            <a mat-flat-button color="primary" routerLink="/cliente/suscripcion">Ver planes</a>
+          } @else {
+            <p class="plan-nombre">{{ suscripcion.tipoSuscripcionNombre }}</p>
+            <div class="chips-row">
+              <span class="chip chip-{{ suscripcion.estado.toLowerCase() }}">{{ suscripcion.estado }}</span>
+            </div>
+            <div class="fechas">
+              <small>Desde {{ suscripcion.fechaInicio | date:'dd/MM/yyyy' }}</small>
+              <small>Hasta {{ suscripcion.fechaFin | date:'dd/MM/yyyy' }}</small>
+              @if (diasRestantes !== null && suscripcion.estado === 'ACTIVA') {
+                <strong>{{ diasRestantes }} días restantes</strong>
+              }
+            </div>
+            @if (suscripcion.extras?.length) {
+              <div class="extras-row">
+                @for (x of suscripcion.extras; track x.id) {
+                  <span class="chip chip-extra">{{ x.nombre }}</span>
+                }
+              </div>
+            }
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- ── Próximas sesiones ── -->
+      <mat-card>
+        <mat-card-content>
+          <div class="card-icon-row">
+            <mat-icon>event</mat-icon>
+            <h3>Próximas sesiones</h3>
+          </div>
+          @if (!proximasSesiones.length) {
+            <p class="texto-muted">No tienes sesiones programadas.</p>
+            <a mat-stroked-button routerLink="/cliente/entrenamientos">Ver entrenamientos</a>
+          } @else {
+            @for (s of proximasSesiones; track s.id) {
+              <div class="sesion-mini">
+                <mat-icon class="sesion-icon">{{ s.tipoEntrenamiento === 'GRUPAL' ? 'groups' : 'person' }}</mat-icon>
+                <div>
+                  <strong>{{ s.entrenamientoNombre }}</strong>
+                  <small>{{ s.fechaHora | date:'dd/MM/yyyy HH:mm' }} · {{ s.ubicacion || 'Sin ubicación' }}</small>
+                </div>
+              </div>
+            }
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- ── Planes específicos pendientes ── -->
+      <mat-card>
+        <mat-card-content>
+          <div class="card-icon-row">
+            <mat-icon>assignment</mat-icon>
+            <h3>Planes asignados pendientes</h3>
+          </div>
+          @if (!planesEspecificos.length) {
+            <p class="texto-muted">No tienes planes pendientes.</p>
+          } @else {
+            @for (p of planesEspecificos; track p.id) {
+              <div class="plan-mini">
+                <mat-icon>fitness_center</mat-icon>
+                <div>
+                  <strong>{{ p.entrenamientoNombre }}</strong>
+                  <small>Por {{ p.entrenadorNombre }} · Asignado {{ p.fechaAsignacion | date:'dd/MM/yyyy' }}</small>
+                  @if (p.notas) { <p class="notas-mini">{{ p.notas }}</p> }
+                </div>
+              </div>
+            }
+            <a mat-stroked-button routerLink="/cliente/entrenamientos" style="margin-top: 12px">Ver todos</a>
+          }
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  }
+
+</app-layout>

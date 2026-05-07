@@ -1,0 +1,85 @@
+<app-layout titulo="Panel de Administración" [navItems]="navItems">
+
+  <div class="page-header">
+    <div>
+      <h2>Usuarios</h2>
+      <p class="subtitulo">Gestiona todos los usuarios de la plataforma</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="abrirDialogo()">
+      <mat-icon>person_add</mat-icon>
+      Nuevo usuario
+    </button>
+  </div>
+
+  <mat-card class="tabla-card">
+    <mat-card-content>
+      @if (cargando) {
+        <div class="loading">
+          <p>Cargando usuarios...</p>
+        </div>
+      } @else if (usuarios.length === 0) {
+        <div class="empty">
+          <mat-icon>people</mat-icon>
+          <p>No hay usuarios registrados</p>
+          <button mat-stroked-button color="primary" (click)="abrirDialogo()">
+            Añadir el primero
+          </button>
+        </div>
+      } @else {
+        <table mat-table [dataSource]="usuarios" class="tabla-usuarios">
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let u">
+              <strong>{{ u.nombre }} {{ u.apellidos }}</strong>
+              @if (u.telefono) {
+                <br><small class="text-muted">{{ u.telefono }}</small>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="rol">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let u">
+              <span class="chip chip-rol chip-rol-{{ u.rol | lowercase }}">{{ rolLabel(u.rol) }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let u">
+              <span class="chip" [class.chip-activo]="u.activo" [class.chip-inactivo]="!u.activo">
+                {{ u.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let u">
+              <button mat-icon-button matTooltip="Editar" color="primary" (click)="abrirDialogo(u)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [matTooltip]="u.activo ? 'Desactivar' : 'Activar'"
+                [color]="u.activo ? 'warn' : 'accent'"
+                (click)="cambiarEstado(u)">
+                <mat-icon>{{ u.activo ? 'block' : 'check_circle' }}</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+</app-layout>
