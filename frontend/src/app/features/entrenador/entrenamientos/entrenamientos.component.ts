@@ -14,6 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { LayoutComponent, NavItem } from '../../../shared/components/layout/layout.component';
 import { EntrenamientoService } from '../../../core/services/entrenamiento.service';
 import { EjercicioService } from '../../../core/services/ejercicio.service';
@@ -40,11 +41,12 @@ import { fechaFuturaValidator } from '../../../core/validators/app.validators';
 })
 export class EntrenamientosComponent implements OnInit {
 
-  navItems: NavItem[] = [
+  private readonly defaultNavItems: NavItem[] = [
     { label: 'Dashboard',      icon: 'dashboard',         ruta: '/entrenador/dashboard' },
     { label: 'Entrenamientos', icon: 'fitness_center',    ruta: '/entrenador/entrenamientos' },
     { label: 'Ejercicios',     icon: 'sports_gymnastics', ruta: '/entrenador/ejercicios' }
   ];
+  navItems: NavItem[] = this.defaultNavItems;
 
   // Lista
   entrenamientos: Entrenamiento[] = [];
@@ -78,7 +80,8 @@ export class EntrenamientosComponent implements OnInit {
     private ejercicioService: EjercicioService,
     private gimnasioService: GimnasioService,
     public contexto: GimnasioContextService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute
   ) {
     this.formEntrenamiento = this.fb.group({
       nombre: ['', Validators.required],
@@ -110,6 +113,9 @@ export class EntrenamientosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const routeNavItems = this.route.snapshot.data['navItems'];
+    if (routeNavItems) this.navItems = routeNavItems;
+
     this.cargarEntrenamientos();
     const id = this.contexto.obtenerIdOFail();
     this.ejercicioService.listarPorGimnasio(id).subscribe(d => this.ejerciciosDisponibles = d);

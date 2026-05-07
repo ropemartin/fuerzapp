@@ -54,6 +54,21 @@ export const routes: Routes = [
           import('./features/propietario/suscripciones/suscripciones.component').then(m => m.SuscripcionesComponent)
       },
       {
+        path: 'entrenamientos',
+        loadComponent: () =>
+          import('./features/entrenador/entrenamientos/entrenamientos.component').then(m => m.EntrenamientosComponent),
+        data: {
+          navItems: [
+            { label: 'Dashboard',      icon: 'dashboard',       ruta: '/propietario/dashboard' },
+            { label: 'Entrenadores',   icon: 'sports',          ruta: '/propietario/entrenadores' },
+            { label: 'Clientes',       icon: 'group',           ruta: '/propietario/clientes' },
+            { label: 'Suscripciones',  icon: 'card_membership', ruta: '/propietario/suscripciones' },
+            { label: 'Entrenamientos', icon: 'fitness_center',  ruta: '/propietario/entrenamientos' },
+            { label: 'Configuración',  icon: 'settings',        ruta: '/propietario/configuracion' }
+          ]
+        }
+      },
+      {
         path: 'configuracion',
         loadComponent: () =>
           import('./features/propietario/configuracion/configuracion.component').then(m => m.ConfiguracionPropietarioComponent)

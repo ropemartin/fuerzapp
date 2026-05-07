@@ -41,6 +41,7 @@ export class DashboardPropietarioComponent implements OnInit {
     { label: 'Entrenadores',   icon: 'sports',          ruta: '/propietario/entrenadores' },
     { label: 'Clientes',       icon: 'group',           ruta: '/propietario/clientes' },
     { label: 'Suscripciones',  icon: 'card_membership', ruta: '/propietario/suscripciones' },
+    { label: 'Entrenamientos', icon: 'fitness_center',  ruta: '/propietario/entrenamientos' },
     { label: 'Configuración',  icon: 'settings',        ruta: '/propietario/configuracion' }
   ];
 
