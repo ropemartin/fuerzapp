@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -77,9 +78,9 @@ public class DataSeeder implements CommandLineRunner {
                 c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15));
 
         // ─── GIMNASIOS ────────────────────────────────────────────────────────
-        Gimnasio fitgym    = gimnasio("FitGym Madrid",        "Calle Gran Vía 45",       "Madrid",    "910000001", "info@fitgym.com",    carlos);
-        Gimnasio powerzone = gimnasio("PowerZone Barcelona",  "Passeig de Gràcia 88",    "Barcelona", "930000002", "info@powerzone.com", laura);
-        Gimnasio ironbody  = gimnasio("IronBody Valencia",    "Avenida del Puerto 12",   "Valencia",  "960000003", "info@ironbody.com",  miguel);
+        Gimnasio fitgym    = gimnasio("FitGym Madrid",        "Calle Gran Vía 45",       "Madrid",    "910000001", "info@fitgym.com",    carlos, 21);
+        Gimnasio powerzone = gimnasio("PowerZone Barcelona",  "Passeig de Gràcia 88",    "Barcelona", "930000002", "info@powerzone.com", laura,  21);
+        Gimnasio ironbody  = gimnasio("IronBody Valencia",    "Avenida del Puerto 12",   "Valencia",  "960000003", "info@ironbody.com",  miguel, 10);
         gimnasioRepository.saveAll(List.of(fitgym, powerzone, ironbody));
 
         // ─── ENTRENADORES EN GIMNASIOS ────────────────────────────────────────
@@ -498,11 +499,44 @@ public class DataSeeder implements CommandLineRunner {
         p.setEstado(EstadoPago.COMPLETADO);
         pagoRepository.save(p);
 
+        Usuario cliente = s.getCliente();
+        TipoSuscripcion tipo = s.getTipoSuscripcion();
+        Gimnasio gym = tipo.getGimnasio();
+
+        int pctIva = gym.getPorcentajeIva() != null ? gym.getPorcentajeIva() : 0;
+        BigDecimal base = importe;
+        BigDecimal importeIva = base.multiply(BigDecimal.valueOf(pctIva))
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        BigDecimal total = base.add(importeIva);
+
         Factura f = new Factura();
         f.setPago(p);
         f.setNumeroFactura(String.format("FAC-2026-%05d", num));
         f.setFechaEmision(p.getFecha());
-        f.setImporteTotal(importe);
+
+        f.setClienteNombre(cliente.getNombre() + " " + cliente.getApellidos());
+        f.setClienteEmail(cliente.getEmail());
+        f.setTipoSuscripcionNombre(tipo.getNombre());
+
+        f.setGimnasioNombre(gym.getNombre());
+        f.setGimnasioDireccion(gym.getDireccion());
+        f.setGimnasioTelefono(gym.getTelefono());
+        f.setGimnasioEmail(gym.getEmail());
+
+        f.setBaseImponible(base);
+        f.setPorcentajeIva(pctIva);
+        f.setImporteIva(importeIva);
+        f.setImporteTotal(total);
+
+        facturaRepository.save(f);
+
+        FacturaLinea linea = new FacturaLinea();
+        linea.setFactura(f);
+        linea.setDescripcion(tipo.getNombre());
+        linea.setPrecioUnitario(importe);
+        linea.setCantidad(1);
+        f.getLineas().add(linea);
+
         facturaRepository.save(f);
     }
 
@@ -513,10 +547,11 @@ public class DataSeeder implements CommandLineRunner {
         return u;
     }
 
-    private Gimnasio gimnasio(String nombre, String dir, String ciudad, String tel, String email, Usuario prop) {
+    private Gimnasio gimnasio(String nombre, String dir, String ciudad, String tel, String email, Usuario prop, int iva) {
         Gimnasio g = new Gimnasio();
         g.setNombre(nombre); g.setDireccion(dir); g.setCiudad(ciudad);
         g.setTelefono(tel); g.setEmail(email); g.setPropietario(prop);
+        g.setPorcentajeIva(iva);
         return g;
     }
 
@@ -549,7 +584,9 @@ public class DataSeeder implements CommandLineRunner {
 
     private ClienteSuscripcionExtra susExtra(ClienteSuscripcion cs, Extra e) {
         ClienteSuscripcionExtra cse = new ClienteSuscripcionExtra();
-        cse.setClienteSuscripcion(cs); cse.setExtra(e); return cse;
+        cse.setClienteSuscripcion(cs); cse.setExtra(e);
+        cse.setPrecioContratacion(e.getPrecio());
+        return cse;
     }
 
     private Entrenamiento entrenamiento(Gimnasio g, Usuario entrenador, String nombre, String desc, TipoEntrenamiento tipo) {

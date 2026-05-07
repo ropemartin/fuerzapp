@@ -43,6 +43,10 @@ export class GimnasioService {
     return this.http.get<Gimnasio>(`${this.base}/gimnasios/${id}`);
   }
 
+  actualizarDatos(id: number, request: GimnasioRequest): Observable<Gimnasio> {
+    return this.http.patch<Gimnasio>(`${this.base}/gimnasios/${id}/datos`, request);
+  }
+
   // ─── Entrenadores ─────────────────────────────────────────────────────────
 
   listarEntrenadores(gimnasioId: number): Observable<Usuario[]> {

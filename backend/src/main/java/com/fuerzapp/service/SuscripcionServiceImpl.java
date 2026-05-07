@@ -167,6 +167,7 @@ public class SuscripcionServiceImpl implements SuscripcionService {
         ClienteSuscripcionExtra cse = new ClienteSuscripcionExtra();
         cse.setClienteSuscripcion(suscripcion);
         cse.setExtra(extra);
+        cse.setPrecioContratacion(extra.getPrecio());
         clienteSuscripcionExtraRepository.save(cse);
 
         return toClienteSuscripcionResponse(suscripcion);

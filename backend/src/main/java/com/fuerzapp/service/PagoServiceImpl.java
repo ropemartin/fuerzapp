@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -135,10 +136,51 @@ public class PagoServiceImpl implements PagoService {
         long totalFacturasAnio = facturaRepository.countByAnio(anioActual);
         String numeroFactura = String.format("FAC-%d-%05d", anioActual, totalFacturasAnio + 1);
 
+        ClienteSuscripcion cs = pago.getClienteSuscripcion();
+        Usuario cliente = cs.getCliente();
+        TipoSuscripcion tipo = cs.getTipoSuscripcion();
+        Gimnasio gimnasio = tipo.getGimnasio();
+
+        // IVA
+        int pctIva = gimnasio.getPorcentajeIva() != null ? gimnasio.getPorcentajeIva() : 0;
+        BigDecimal baseImponible = pago.getImporte();
+        BigDecimal importeIva = baseImponible
+                .multiply(BigDecimal.valueOf(pctIva))
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        BigDecimal importeTotal = baseImponible.add(importeIva);
+
         Factura factura = new Factura();
         factura.setPago(pago);
         factura.setNumeroFactura(numeroFactura);
-        factura.setImporteTotal(pago.getImporte());
+
+        // Snapshots cliente
+        factura.setClienteNombre(cliente.getNombre() + " " + cliente.getApellidos());
+        factura.setClienteEmail(cliente.getEmail());
+        factura.setTipoSuscripcionNombre(tipo.getNombre());
+
+        // Snapshots gimnasio
+        factura.setGimnasioNombre(gimnasio.getNombre());
+        factura.setGimnasioDireccion(gimnasio.getDireccion());
+        factura.setGimnasioTelefono(gimnasio.getTelefono());
+        factura.setGimnasioEmail(gimnasio.getEmail());
+        factura.setGimnasioLogoUrl(gimnasio.getLogoUrl());
+
+        // Importes
+        factura.setBaseImponible(baseImponible);
+        factura.setPorcentajeIva(pctIva);
+        factura.setImporteIva(importeIva);
+        factura.setImporteTotal(importeTotal);
+
+        facturaRepository.save(factura);
+
+        // Línea de factura: suscripción
+        FacturaLinea linea = new FacturaLinea();
+        linea.setFactura(factura);
+        linea.setDescripcion(tipo.getNombre());
+        linea.setPrecioUnitario(pago.getImporte());
+        linea.setCantidad(1);
+        factura.getLineas().add(linea);
+
         facturaRepository.save(factura);
     }
 
@@ -195,14 +237,31 @@ public class PagoServiceImpl implements PagoService {
         r.setPagoId(f.getPago().getId());
         r.setNumeroFactura(f.getNumeroFactura());
         r.setFechaEmision(f.getFechaEmision());
+
+        r.setClienteNombre(f.getClienteNombre());
+        r.setClienteEmail(f.getClienteEmail());
+        r.setTipoSuscripcionNombre(f.getTipoSuscripcionNombre());
+
+        r.setGimnasioNombre(f.getGimnasioNombre());
+        r.setGimnasioDireccion(f.getGimnasioDireccion());
+        r.setGimnasioTelefono(f.getGimnasioTelefono());
+        r.setGimnasioEmail(f.getGimnasioEmail());
+        r.setGimnasioLogoUrl(f.getGimnasioLogoUrl());
+
+        r.setBaseImponible(f.getBaseImponible());
+        r.setPorcentajeIva(f.getPorcentajeIva());
+        r.setImporteIva(f.getImporteIva());
         r.setImporteTotal(f.getImporteTotal());
-        r.setClienteNombre(
-                f.getPago().getClienteSuscripcion().getCliente().getNombre() + " " +
-                f.getPago().getClienteSuscripcion().getCliente().getApellidos()
-        );
-        r.setClienteEmail(f.getPago().getClienteSuscripcion().getCliente().getEmail());
-        r.setTipoSuscripcionNombre(f.getPago().getClienteSuscripcion().getTipoSuscripcion().getNombre());
-        r.setGimnasioNombre(f.getPago().getClienteSuscripcion().getTipoSuscripcion().getGimnasio().getNombre());
+
+        r.setLineas(f.getLineas().stream().map(l -> {
+            FacturaLineaResponse lr = new FacturaLineaResponse();
+            lr.setDescripcion(l.getDescripcion());
+            lr.setPrecioUnitario(l.getPrecioUnitario());
+            lr.setCantidad(l.getCantidad());
+            lr.setSubtotal(l.getPrecioUnitario().multiply(BigDecimal.valueOf(l.getCantidad())));
+            return lr;
+        }).toList());
+
         return r;
     }
 }

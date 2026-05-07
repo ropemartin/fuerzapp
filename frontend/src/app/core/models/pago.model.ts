@@ -13,16 +13,35 @@ export interface Pago {
   numeroFactura?: string;
 }
 
+export interface FacturaLinea {
+  descripcion: string;
+  precioUnitario: number;
+  cantidad: number;
+  subtotal: number;
+}
+
 export interface Factura {
   id: number;
   pagoId: number;
   numeroFactura: string;
   fechaEmision: string;
-  importeTotal: number;
+
   clienteNombre: string;
   clienteEmail: string;
   tipoSuscripcionNombre: string;
+
   gimnasioNombre: string;
+  gimnasioDireccion?: string;
+  gimnasioTelefono?: string;
+  gimnasioEmail?: string;
+  gimnasioLogoUrl?: string;
+
+  baseImponible: number;
+  porcentajeIva: number;
+  importeIva: number;
+  importeTotal: number;
+
+  lineas: FacturaLinea[];
 }
 
 export interface CrearSesionPagoRequest {

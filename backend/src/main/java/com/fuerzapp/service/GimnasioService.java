@@ -17,6 +17,7 @@ public interface GimnasioService {
     List<GimnasioResponse> listarTodos();
     GimnasioResponse obtenerPorId(Long id);
     GimnasioResponse actualizarGimnasio(Long id, GimnasioRequest request);
+    GimnasioResponse actualizarDatosPropietario(Long id, GimnasioRequest request);
     void cambiarEstado(Long id, boolean activo);
 
     List<GimnasioResponse> listarPorPropietario(Long propietarioId);

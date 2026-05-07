@@ -82,6 +82,14 @@ public class GimnasioServiceImpl implements GimnasioService {
         gimnasioRepository.save(gimnasio);
     }
 
+    @Override
+    @Transactional
+    public GimnasioResponse actualizarDatosPropietario(Long id, GimnasioRequest request) {
+        Gimnasio gimnasio = findGimnasioById(id);
+        mapearGimnasio(request, gimnasio);
+        return toResponse(gimnasioRepository.save(gimnasio));
+    }
+
     // ─── PROPIETARIO: gimnasios propios ──────────────────────────────────────
 
     @Override
@@ -276,6 +284,9 @@ public class GimnasioServiceImpl implements GimnasioService {
         gimnasio.setTelefono(request.getTelefono());
         gimnasio.setEmail(request.getEmail());
         gimnasio.setLogoUrl(request.getLogoUrl());
+        if (request.getPorcentajeIva() != null) {
+            gimnasio.setPorcentajeIva(request.getPorcentajeIva());
+        }
     }
 
     private GimnasioResponse toResponse(Gimnasio g) {
@@ -287,6 +298,7 @@ public class GimnasioServiceImpl implements GimnasioService {
         response.setTelefono(g.getTelefono());
         response.setEmail(g.getEmail());
         response.setLogoUrl(g.getLogoUrl());
+        response.setPorcentajeIva(g.getPorcentajeIva());
         response.setFechaAlta(g.getFechaAlta());
         response.setActivo(g.getActivo());
         response.setPropietarioId(g.getPropietario().getId());

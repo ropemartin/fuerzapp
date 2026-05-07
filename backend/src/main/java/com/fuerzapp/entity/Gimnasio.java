@@ -27,6 +27,9 @@ public class Gimnasio {
     @Column(name = "logo_url")
     private String logoUrl;
 
+    @Column(name = "porcentaje_iva", nullable = false)
+    private Integer porcentajeIva = 0;
+
     @Column(name = "fecha_alta", nullable = false)
     private LocalDateTime fechaAlta = LocalDateTime.now();
 

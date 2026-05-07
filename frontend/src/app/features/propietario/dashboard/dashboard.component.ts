@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
@@ -13,7 +14,7 @@ import { LayoutComponent, NavItem } from '../../../shared/components/layout/layo
 import { GimnasioService } from '../../../core/services/gimnasio.service';
 import { GimnasioContextService } from '../../../core/services/gimnasio-context.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Gimnasio } from '../../../core/models/gimnasio.model';
+import { Gimnasio, GimnasioRequest } from '../../../core/models/gimnasio.model';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -25,6 +26,7 @@ import { forkJoin } from 'rxjs';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatInputModule,
     MatSelectModule,
     MatFormFieldModule,
     MatDividerModule,
@@ -47,6 +49,9 @@ export class DashboardPropietarioComponent implements OnInit {
   gimnasioSeleccionado: Gimnasio | null = null;
   stats = { entrenadores: 0, clientes: 0 };
   cargando = true;
+  editandoGimnasio = false;
+  guardando = false;
+  formGimnasio: GimnasioRequest = { nombre: '' };
 
   constructor(
     private gimnasioService: GimnasioService,
@@ -86,6 +91,44 @@ export class DashboardPropietarioComponent implements OnInit {
 
   irA(ruta: string): void {
     this.router.navigate([ruta]);
+  }
+
+  toggleEditarGimnasio(): void {
+    if (!this.editandoGimnasio && this.gimnasioSeleccionado) {
+      const g = this.gimnasioSeleccionado;
+      this.formGimnasio = {
+        nombre: g.nombre,
+        direccion: g.direccion,
+        ciudad: g.ciudad,
+        telefono: g.telefono,
+        email: g.email,
+        logoUrl: g.logoUrl,
+        porcentajeIva: g.porcentajeIva ?? 0
+      };
+    }
+    this.editandoGimnasio = !this.editandoGimnasio;
+  }
+
+  guardarGimnasio(): void {
+    if (!this.gimnasioSeleccionado || !this.formGimnasio.nombre?.trim()) return;
+    this.guardando = true;
+
+    this.gimnasioService.actualizarDatos(this.gimnasioSeleccionado.id, this.formGimnasio).subscribe({
+      next: actualizado => {
+        // Actualizar el gimnasio seleccionado y la lista
+        const idx = this.misGimnasios.findIndex(g => g.id === actualizado.id);
+        if (idx !== -1) this.misGimnasios[idx] = actualizado;
+        this.gimnasioSeleccionado = actualizado;
+        this.contexto.seleccionar(actualizado);
+        this.editandoGimnasio = false;
+        this.guardando = false;
+        this.snackBar.open('Datos del gimnasio actualizados', 'Cerrar', { duration: 3000 });
+      },
+      error: () => {
+        this.snackBar.open('Error al guardar los cambios', 'Cerrar', { duration: 3000 });
+        this.guardando = false;
+      }
+    });
   }
 
   private cargarStats(): void {

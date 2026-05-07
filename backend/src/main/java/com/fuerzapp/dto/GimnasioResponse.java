@@ -14,6 +14,7 @@ public class GimnasioResponse {
     private String telefono;
     private String email;
     private String logoUrl;
+    private Integer porcentajeIva;
     private LocalDateTime fechaAlta;
     private Boolean activo;
     private Long propietarioId;

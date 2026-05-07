@@ -6,6 +6,7 @@ export interface Gimnasio {
   telefono?: string;
   email?: string;
   logoUrl?: string;
+  porcentajeIva?: number;
   fechaAlta: string;
   activo: boolean;
   propietarioId?: number;
@@ -20,6 +21,7 @@ export interface GimnasioRequest {
   telefono?: string;
   email?: string;
   logoUrl?: string;
+  porcentajeIva?: number;
   propietarioId?: number;
 }
 

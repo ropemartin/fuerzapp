@@ -19,5 +19,7 @@ public class GimnasioRequest {
 
     private String logoUrl;
 
+    private Integer porcentajeIva;
+
     private Long propietarioId;
 }

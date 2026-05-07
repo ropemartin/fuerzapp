@@ -100,3 +100,20 @@
   text-align: center;
   padding: 40px;
 }
+
+.editar-card {
+  margin-top: 24px;
+
+  mat-card-header { margin-bottom: 8px; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    margin-top: 16px;
+
+    .full-width { grid-column: 1 / -1; }
+
+    mat-form-field { width: 100%; }
+  }
+}

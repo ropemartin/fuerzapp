@@ -1,6 +1,7 @@
 package com.fuerzapp.controller;
 
 import com.fuerzapp.dto.EntrenamientoResponse;
+import com.fuerzapp.dto.GimnasioRequest;
 import com.fuerzapp.dto.GimnasioResponse;
 import com.fuerzapp.dto.PerfilUsuarioRequest;
 import com.fuerzapp.dto.RegistroUsuarioRequest;
@@ -50,6 +51,14 @@ public class GimnasioController {
     @PreAuthorize("hasAnyRole('PROPIETARIO', 'ADMIN_PLATAFORMA')")
     public ResponseEntity<GimnasioResponse> obtenerGimnasio(@PathVariable Long id) {
         return ResponseEntity.ok(gimnasioService.obtenerPorId(id));
+    }
+
+    @PatchMapping("/{id}/datos")
+    @PreAuthorize("hasAnyRole('PROPIETARIO', 'ADMIN_PLATAFORMA')")
+    public ResponseEntity<GimnasioResponse> actualizarDatos(
+            @PathVariable Long id,
+            @Valid @RequestBody GimnasioRequest request) {
+        return ResponseEntity.ok(gimnasioService.actualizarDatosPropietario(id, request));
     }
 
     // ─── Entrenadores ────────────────────────────────────────────────────────

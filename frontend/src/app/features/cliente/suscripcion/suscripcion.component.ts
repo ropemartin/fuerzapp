@@ -15,7 +15,7 @@ import { SuscripcionService } from '../../../core/services/suscripcion.service';
 import { PagoService } from '../../../core/services/pago.service';
 import { GimnasioContextService } from '../../../core/services/gimnasio-context.service';
 import { ClienteSuscripcion, TipoSuscripcion, Extra } from '../../../core/models/suscripcion.model';
-import { Pago, Factura } from '../../../core/models/pago.model';
+import { Pago } from '../../../core/models/pago.model';
 
 @Component({
   selector: 'app-suscripcion-cliente',
@@ -133,32 +133,17 @@ export class SuscripcionClienteComponent implements OnInit {
 
   descargarFactura(pago: Pago): void {
     if (!pago.facturaId) return;
-    this.pagoService.obtenerFactura(pago.id).subscribe({
-      next: f => {
-        const contenido = this.generarTextoFactura(f);
-        const blob = new Blob([contenido], { type: 'text/plain' });
+    this.pagoService.descargarFacturaPdf(pago.id).subscribe({
+      next: blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${f.numeroFactura}.txt`;
+        a.download = `factura-${pago.numeroFactura}.pdf`;
         a.click();
         URL.revokeObjectURL(url);
       },
-      error: () => this.snack.open('Error al obtener factura', 'Cerrar', { duration: 3000 })
+      error: () => this.snack.open('Error al descargar factura', 'Cerrar', { duration: 3000 })
     });
-  }
-
-  private generarTextoFactura(f: Factura): string {
-    return [
-      `FACTURA: ${f.numeroFactura}`,
-      `Fecha: ${new Date(f.fechaEmision).toLocaleDateString('es-ES')}`,
-      ``,
-      `Cliente: ${f.clienteNombre} (${f.clienteEmail})`,
-      `Gimnasio: ${f.gimnasioNombre}`,
-      `Plan: ${f.tipoSuscripcionNombre}`,
-      ``,
-      `TOTAL: ${f.importeTotal.toFixed(2)} €`
-    ].join('\n');
   }
 
   get diasRestantes(): number | null {

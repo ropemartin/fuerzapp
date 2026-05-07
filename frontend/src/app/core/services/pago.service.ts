@@ -26,4 +26,8 @@ export class PagoService {
   obtenerFactura(pagoId: number): Observable<Factura> {
     return this.http.get<Factura>(`${this.base}/pagos/${pagoId}/factura`);
   }
+
+  descargarFacturaPdf(pagoId: number): Observable<Blob> {
+    return this.http.get(`${this.base}/pagos/${pagoId}/factura/pdf`, { responseType: 'blob' });
+  }
 }
