@@ -16,6 +16,10 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  cambiarPassword(passwordActual: string, passwordNueva: string): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/auth/cambiar-password`, { passwordActual, passwordNueva });
+  }
+
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/login`, request).pipe(
       tap(response => {

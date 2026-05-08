@@ -7,7 +7,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth.service';
+import { CambiarPasswordDialogComponent } from '../cambiar-password-dialog/cambiar-password-dialog.component';
 
 export interface NavItem {
   label: string;
@@ -26,7 +28,8 @@ export interface NavItem {
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDialogModule
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
@@ -36,9 +39,13 @@ export class LayoutComponent {
   @Input() titulo = 'Fuerzapp';
   @Input() navItems: NavItem[] = [];
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(public authService: AuthService, private router: Router, private dialog: MatDialog) {}
 
   logout(): void {
     this.authService.logout();
+  }
+
+  abrirCambiarPassword(): void {
+    this.dialog.open(CambiarPasswordDialogComponent, { width: '440px' });
   }
 }
