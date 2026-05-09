@@ -29,6 +29,14 @@ public class PagoController {
         return ResponseEntity.ok(pagoService.crearSesionPago(request));
     }
 
+    // El propietario registra un pago en efectivo
+    @PostMapping("/efectivo")
+    @PreAuthorize("hasRole('PROPIETARIO')")
+    public ResponseEntity<PagoResponse> pagoEfectivo(
+            @Valid @RequestBody PagoEfectivoRequest request) {
+        return ResponseEntity.ok(pagoService.registrarPagoEfectivo(request.getClienteSuscripcionId()));
+    }
+
     // Stripe llama a este endpoint al completarse o fallar un pago
     // Es público: la seguridad la garantiza la firma del webhook
     @PostMapping("/webhook")

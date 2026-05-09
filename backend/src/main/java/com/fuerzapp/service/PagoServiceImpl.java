@@ -91,6 +91,29 @@ public class PagoServiceImpl implements PagoService {
         }
     }
 
+    // ─── Pago en efectivo (registrado por el propietario) ────────────────────
+
+    @Override
+    @Transactional
+    public PagoResponse registrarPagoEfectivo(Long clienteSuscripcionId) {
+        ClienteSuscripcion suscripcion = clienteSuscripcionRepository
+                .findById(clienteSuscripcionId)
+                .orElseThrow(() -> new RuntimeException("Suscripción no encontrada"));
+
+        Pago pago = new Pago();
+        pago.setClienteSuscripcion(suscripcion);
+        pago.setImporte(suscripcion.getTipoSuscripcion().getPrecio());
+        pago.setEstado(EstadoPago.COMPLETADO);
+        pagoRepository.save(pago);
+
+        suscripcion.setEstado(EstadoSuscripcion.ACTIVA);
+        clienteSuscripcionRepository.save(suscripcion);
+
+        generarFactura(pago);
+
+        return toPagoResponse(pago);
+    }
+
     // ─── Webhook de Stripe ────────────────────────────────────────────────────
 
     @Override

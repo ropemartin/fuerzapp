@@ -212,61 +212,126 @@
     </mat-tab>
 
     <!-- TAB 3: Suscriptores -->
-    <mat-tab label="Suscriptores activos">
+    <mat-tab label="Suscriptores">
       <div class="tab-content">
-        <mat-card>
-          <mat-card-content>
-            @if (suscriptores.length === 0) {
-              <div class="estado-vacio">
-                <mat-icon>people</mat-icon>
-                <p>No hay suscriptores activos</p>
-              </div>
-            } @else {
-              <table mat-table [dataSource]="suscriptores">
-                <ng-container matColumnDef="cliente">
-                  <th mat-header-cell *matHeaderCellDef>Cliente</th>
-                  <td mat-cell *matCellDef="let s">
-                    <strong>{{ s.clienteNombre }}</strong>
-                    <br><small class="text-muted">{{ s.clienteEmail }}</small>
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="tipo">
-                  <th mat-header-cell *matHeaderCellDef>Suscripción</th>
-                  <td mat-cell *matCellDef="let s">
-                    {{ s.tipoSuscripcionNombre }}
-                    <br><small>{{ s.precio | currency:'EUR':'symbol':'1.2-2' }}</small>
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="fechas">
-                  <th mat-header-cell *matHeaderCellDef>Vigencia</th>
-                  <td mat-cell *matCellDef="let s">
-                    {{ s.fechaInicio | date:'dd/MM/yyyy' }} — {{ s.fechaFin | date:'dd/MM/yyyy' }}
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="estado">
-                  <th mat-header-cell *matHeaderCellDef>Estado</th>
-                  <td mat-cell *matCellDef="let s">
-                    <span class="chip" [class]="'chip-' + s.estado.toLowerCase()">{{ s.estado }}</span>
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="extras">
-                  <th mat-header-cell *matHeaderCellDef>Extras</th>
-                  <td mat-cell *matCellDef="let s">
-                    @if (s.extras.length === 0) {
-                      <span class="text-muted">—</span>
-                    } @else {
-                      @for (e of s.extras; track e.id) {
-                        <span class="chip chip-extra">{{ e.nombre }}</span>
-                      }
+        <div class="two-col">
+
+          <!-- Formulario: asignar suscripción -->
+          <mat-card class="form-card">
+            <mat-card-header>
+              <mat-card-title>Asignar suscripción</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <form [formGroup]="formAsignar" (ngSubmit)="asignarYCobrar()">
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Cliente *</mat-label>
+                  <mat-select formControlName="clienteId">
+                    @for (c of clientes; track c.id) {
+                      <mat-option [value]="c.id">{{ c.nombre }} {{ c.apellidos }}</mat-option>
                     }
-                  </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="columnasSuscriptores"></tr>
-                <tr mat-row *matRowDef="let row; columns: columnasSuscriptores;"></tr>
-              </table>
-            }
-          </mat-card-content>
-        </mat-card>
+                  </mat-select>
+                  @if (formAsignar.get('clienteId')?.hasError('required')) {
+                    <mat-error>Selecciona un cliente</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Tipo de suscripción *</mat-label>
+                  <mat-select formControlName="tipoSuscripcionId">
+                    @for (t of tipos; track t.id) {
+                      <mat-option [value]="t.id">{{ t.nombre }} — {{ t.precio | currency:'EUR':'symbol':'1.2-2' }}</mat-option>
+                    }
+                  </mat-select>
+                  @if (formAsignar.get('tipoSuscripcionId')?.hasError('required')) {
+                    <mat-error>Selecciona un tipo</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Fecha de inicio *</mat-label>
+                  <input matInput type="date" formControlName="fechaInicio" />
+                </mat-form-field>
+
+                <div class="form-actions">
+                  <button mat-flat-button color="primary" type="submit"
+                          [disabled]="formAsignar.invalid || asignando">
+                    <mat-icon>payments</mat-icon>
+                    Asignar y cobrar en efectivo
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Tabla de suscriptores -->
+          <mat-card>
+            <mat-card-content>
+              @if (suscriptores.length === 0) {
+                <div class="estado-vacio">
+                  <mat-icon>people</mat-icon>
+                  <p>No hay suscriptores</p>
+                </div>
+              } @else {
+                <table mat-table [dataSource]="suscriptores">
+                  <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef>Cliente</th>
+                    <td mat-cell *matCellDef="let s">
+                      <strong>{{ s.clienteNombre }}</strong>
+                      <br><small class="text-muted">{{ s.clienteEmail }}</small>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="tipo">
+                    <th mat-header-cell *matHeaderCellDef>Suscripción</th>
+                    <td mat-cell *matCellDef="let s">
+                      {{ s.tipoSuscripcionNombre }}
+                      <br><small>{{ s.precio | currency:'EUR':'symbol':'1.2-2' }}</small>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="fechas">
+                    <th mat-header-cell *matHeaderCellDef>Vigencia</th>
+                    <td mat-cell *matCellDef="let s">
+                      {{ s.fechaInicio | date:'dd/MM/yyyy' }} — {{ s.fechaFin | date:'dd/MM/yyyy' }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef>Estado</th>
+                    <td mat-cell *matCellDef="let s">
+                      <span class="chip" [class]="'chip-' + s.estado.toLowerCase()">{{ s.estado }}</span>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="extras">
+                    <th mat-header-cell *matHeaderCellDef>Extras</th>
+                    <td mat-cell *matCellDef="let s">
+                      @if (s.extras.length === 0) {
+                        <span class="text-muted">—</span>
+                      } @else {
+                        @for (e of s.extras; track e.id) {
+                          <span class="chip chip-extra">{{ e.nombre }}</span>
+                        }
+                      }
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let s">
+                      @if (s.estado === 'PENDIENTE') {
+                        <button mat-icon-button color="primary"
+                                matTooltip="Registrar pago en efectivo"
+                                (click)="registrarPagoEfectivo(s)">
+                          <mat-icon>payments</mat-icon>
+                        </button>
+                      }
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="columnasSuscriptores"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnasSuscriptores;"></tr>
+                </table>
+              }
+            </mat-card-content>
+          </mat-card>
+
+        </div>
       </div>
     </mat-tab>
 

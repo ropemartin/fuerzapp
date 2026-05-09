@@ -30,4 +30,8 @@ export class PagoService {
   descargarFacturaPdf(pagoId: number): Observable<Blob> {
     return this.http.get(`${this.base}/pagos/${pagoId}/factura/pdf`, { responseType: 'blob' });
   }
+
+  registrarPagoEfectivo(clienteSuscripcionId: number): Observable<Pago> {
+    return this.http.post<Pago>(`${this.base}/pagos/efectivo`, { clienteSuscripcionId });
+  }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public interface PagoService {
 
     SesionPagoResponse crearSesionPago(CrearSesionPagoRequest request);
+    PagoResponse registrarPagoEfectivo(Long clienteSuscripcionId);
     void procesarWebhook(String payload, String sigHeader);
     List<PagoResponse> listarPagosPorCliente(Long clienteId);
     List<PagoResponse> listarPagosPorGimnasio(Long gimnasioId);
