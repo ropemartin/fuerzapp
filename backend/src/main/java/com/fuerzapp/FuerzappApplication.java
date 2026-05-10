@@ -1,3 +1,4 @@
+// Copyright (c) 2026 Roberto Martín Casañas. Todos los derechos reservados.
 package com.fuerzapp;
 
 import org.springframework.boot.SpringApplication;

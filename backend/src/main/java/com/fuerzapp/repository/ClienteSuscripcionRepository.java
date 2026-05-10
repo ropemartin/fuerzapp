@@ -24,6 +24,15 @@ public interface ClienteSuscripcionRepository extends JpaRepository<ClienteSuscr
             """)
     Optional<ClienteSuscripcion> findActivaVigenteByClienteId(@Param("clienteId") Long clienteId);
 
+    // Suscripción activa o pendiente de pago de un cliente (para el panel cliente)
+    @Query("""
+            SELECT cs FROM ClienteSuscripcion cs
+            WHERE cs.cliente.id = :clienteId
+            AND cs.estado IN ('ACTIVA', 'PENDIENTE')
+            ORDER BY cs.fechaInicio DESC
+            """)
+    List<ClienteSuscripcion> findActivaOPendienteByClienteId(@Param("clienteId") Long clienteId);
+
     // Suscripciones activas y vigentes de un gimnasio (para el propietario)
     @Query("""
             SELECT cs FROM ClienteSuscripcion cs

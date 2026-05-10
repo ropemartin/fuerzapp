@@ -1,3 +1,4 @@
+// Copyright (c) 2026 Roberto Martín Casañas. Todos los derechos reservados.
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';

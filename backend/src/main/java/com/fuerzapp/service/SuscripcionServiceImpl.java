@@ -116,10 +116,11 @@ public class SuscripcionServiceImpl implements SuscripcionService {
 
     @Override
     public ClienteSuscripcionResponse obtenerSuscripcionCliente(Long clienteId) {
-        ClienteSuscripcion suscripcion = clienteSuscripcionRepository
-                .findActivaVigenteByClienteId(clienteId)
+        return clienteSuscripcionRepository
+                .findActivaOPendienteByClienteId(clienteId)
+                .stream().findFirst()
+                .map(this::toClienteSuscripcionResponse)
                 .orElseThrow(() -> new RuntimeException("El cliente no tiene una suscripción activa"));
-        return toClienteSuscripcionResponse(suscripcion);
     }
 
     @Override

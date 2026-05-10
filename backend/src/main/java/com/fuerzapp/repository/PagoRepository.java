@@ -30,4 +30,6 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     Optional<Pago> findByStripePaymentIntentId(String stripePaymentIntentId);
 
     List<Pago> findByClienteSuscripcionIdAndEstado(Long clienteSuscripcionId, EstadoPago estado);
+
+    Optional<Pago> findFirstByClienteSuscripcionIdAndEstado(Long clienteSuscripcionId, EstadoPago estado);
 }

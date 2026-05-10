@@ -5,6 +5,8 @@ import com.fuerzapp.entity.*;
 import com.fuerzapp.enums.EstadoPago;
 import com.fuerzapp.enums.EstadoSuscripcion;
 import com.fuerzapp.repository.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
@@ -45,11 +47,15 @@ public class PagoServiceImpl implements PagoService {
         String nombreSuscripcion = suscripcion.getTipoSuscripcion().getNombre();
         String nombreGimnasio = suscripcion.getTipoSuscripcion().getGimnasio().getNombre();
 
-        Pago pago = new Pago();
-        pago.setClienteSuscripcion(suscripcion);
-        pago.setImporte(precio);
-        pago.setEstado(EstadoPago.PENDIENTE);
-        pagoRepository.save(pago);
+        Pago pago = pagoRepository
+                .findFirstByClienteSuscripcionIdAndEstado(suscripcion.getId(), EstadoPago.PENDIENTE)
+                .orElseGet(() -> {
+                    Pago p = new Pago();
+                    p.setClienteSuscripcion(suscripcion);
+                    p.setImporte(precio);
+                    p.setEstado(EstadoPago.PENDIENTE);
+                    return pagoRepository.save(p);
+                });
 
         try {
             long importeCentimos = precio.multiply(BigDecimal.valueOf(100)).longValue();
@@ -128,11 +134,16 @@ public class PagoServiceImpl implements PagoService {
         }
 
         if ("checkout.session.completed".equals(event.getType())) {
-            Session session = (Session) event.getDataObjectDeserializer()
-                    .getObject()
-                    .orElseThrow(() -> new RuntimeException("No se pudo deserializar el evento de Stripe"));
-
-            String pagoIdStr = session.getMetadata().get("pagoId");
+            String rawJson = event.getDataObjectDeserializer().getRawJson();
+            String pagoIdStr;
+            try {
+                JsonNode sessionJson = new ObjectMapper().readTree(rawJson);
+                JsonNode metadata = sessionJson.get("metadata");
+                pagoIdStr = (metadata != null && metadata.has("pagoId"))
+                        ? metadata.get("pagoId").asText() : null;
+            } catch (Exception e) {
+                throw new RuntimeException("Error al leer metadata del evento Stripe");
+            }
             if (pagoIdStr == null) return;
 
             Long pagoId = Long.parseLong(pagoIdStr);
